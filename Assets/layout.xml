@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Canvas xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:xLayout"
+        xsi:schemaLocation="urn:xLayout layout.xsd">
+
+    <RawImage Dock="true" Color="(0.1, 0.2, 0.5)"  Name="Background" />
+    
+    <RawImage AnchorX="(0, 1)" AnchorY="(1, 1)" Height="160" Pivot="(0.5, 1)" Color="(0, 0, 0, 0.4)" Name="TopBar">
+        <HorizontalLayout ExpandHeight="true" Flex="true">
+            <RawImage Width="320" Color="(0, 0, 0, 0.2)" Name="Element">
+                
+            </RawImage>
+            <Empty Width="fill" Name="Icons">
+                <HorizontalLayout ExpandHeight="true" Align="middle" VertAlign="middle" Padding="17, 0, 17, 0" Spacing="10">
+                    <Image PreserveAspect="true" Width="150" Image="Images/circ.png" />
+                    <Image PreserveAspect="true" Width="150" Image="Images/circ.png" />
+                    <Image PreserveAspect="true" Width="150" Image="Images/circ.png" />
+                    <Image PreserveAspect="true" Width="150" Image="Images/emptycirc.png" />
+                    <Image PreserveAspect="true" Width="150" Image="Images/emptycirc.png" />
+                </HorizontalLayout>
+            </Empty>
+            <RawImage Width="420" Color="(0, 0, 0, 0.2)" Key="Time">
+                <Label Text="24:00" Dock="true" Color="(1, 1, 1)" FontSize="40" Key="ada" Name="Timer">
+                    <Components>
+                        <Component Type="xLayout.Example.Timer">
+                            <Binding Field="obj" Source="{this}" />
+                            <Binding Field="tmPro" Source="ada" />
+                        </Component>
+                    </Components>
+                </Label>
+            </RawImage>
+        </HorizontalLayout>
+    </RawImage>
+    
+    <Empty AnchorY="(0, 1)" Top="160" AnchorX="(1, 1)" Width="800" Pivot="(1, 0.5)" Name="Sidebar">
+        <RawImage Dock="true" Right="40" Color="(0, 0, 0, 0.2)" Name="Margin">
+            
+            <VerticalLayout ExpandWidth="true" Spacing="60" Padding="50, 0, 0, 0" VertAlign="top">
+                <RawImage Color="(0, 0, 0, 0.6)" Height="100" Name="Header">
+                    <Label Text="Header 1" FontSize="50" Color="(1, 1, 1)" Dock="true" Name="Text" />
+                </RawImage>
+                <Label Color="(1, 1, 1)" FontSize="50"  FitSize="vertical" Text="Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet." Name="Description" />
+                <RawImage Color="(0, 0, 0, 0.2)" Height="120" Name="Header">
+                    <Label Text="About" Color="(1, 1, 1)" Dock="true" FontSize="50" Name="Text"  />
+                </RawImage>
+                <Label Color="(1, 1, 1)" FitSize="vertical" Text="Lorem ipsum dolor sit amet." FontSize="50" Name="Description" />
+            </VerticalLayout>
+        </RawImage>
+    </Empty>
+    
+    <Empty Dock="true" Top="260" Right="900" Left="100" Bottom="100" Name="Content">
+        <RawImage Color="(0, 0, 0, 0.25)" Dock="true" Name="Scroll">
+            <Scroll>
+                <ListView Items="{Binding items}" AnchorX="(0, 1)" AnchorY="(1, 1)" Pivot="(0.5, 1)">
+                    <VerticalLayout ExpandWidth="true" VertAlign="top" Spacing="40" FitSize="true">
+                    </VerticalLayout>
+                    <ListView.Element>
+                        <RawImage Name="Element" Color="(1, 1, 1, 0.4)" Height="150">
+                            <RawImage Width="150" Height="150" AnchorX="(0, 0)" AnchorY="(1, 1)" Pivot="(0, 1)" Color="(1, 0, 0)" />
+                            <Label Text="Text" Dock="true" Left="170" FontSize="70" Color="(1, 1, 1)" Align="left" />
+                            <ListView Items="{Binding Items}" AnchorX="(1, 1)" Pivot="(1, 0.5)" AnchorY="(0, 1)" Width="300">
+                                <HorizontalLayout Spacing="20">
+                                    
+                                </HorizontalLayout>
+                                <ListView.Element>
+                                    <RawImage Color="(1, 1, 1)" Width="50" Height="50"/>
+                                </ListView.Element>
+                            </ListView>
+                        </RawImage>
+                    </ListView.Element>
+                </ListView>
+            </Scroll>
+        </RawImage>
+    </Empty>
+     
+    <RawImage Dock="true" Color="(0, 0, 0.3, 1)" Active="false" Name="overlay">
+        <RawImage Width="1100" Height="800" Color="(0, 0, 0, 0.8)" Name="Background" Padding="30">
+            <VerticalLayout ExpandWidth="true" Flex="true">
+                <Label Text="This is box" Color="(1, 1, 1)" FontSize="120" FitSize="vertical"/>
+                <RawImage Color="(1, 1, 1, 0.5)" Height="fill" />
+                <Empty Height="200" Padding="16, 16, 16, 16" >
+                    <HorizontalLayout Align="right" ExpandHeight="true">
+                        <RawImage Width="280" Color="(1, 0, 0)">
+                            <Label Dock="true" Color="(1, 1, 1)" Text="Close" FontSize="80" />
+                        </RawImage>
+                    </HorizontalLayout>
+                </Empty>
+            </VerticalLayout>
+        </RawImage>
+    </RawImage>
+    
+</Canvas>

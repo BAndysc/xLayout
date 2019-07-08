@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:xLayout"
+           xmlns="urn:xLayout"
+           elementFormDefault="qualified">
+  <xs:element name="Canvas" type="Canvas" />  
+  <xs:complexType name="Container">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element type="Label" name="Label">
+        <xs:annotation>
+          <xs:documentation>
+            TextMeshProUGUI with text
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="HorizontalLayout" name="HorizontalLayout" />
+      <xs:element type="VerticalLayout" name="VerticalLayout" />
+      <xs:element type="Scroll" name="Scroll" />
+      <xs:element type="ListView" name="ListView" />
+      <xs:element type="RawImage" name="RawImage">
+        <xs:annotation>
+          <xs:documentation>
+            RawImage
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element type="Image" name="Image">
+        <xs:annotation>
+          <xs:documentation>
+            Image
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element type="Empty" name="Empty">
+        <xs:annotation>
+          <xs:documentation>
+            Empty gameobject
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+    </xs:choice>
+  </xs:complexType>
+  
+  <xs:complexType name="Element">
+    <xs:complexContent>
+      <xs:extension base="Container">
+
+        <xs:choice minOccurs="0">
+          <xs:element name="Components">
+            <xs:complexType>
+              <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Component">
+                  <xs:complexType>
+                    <xs:choice maxOccurs="unbounded" minOccurs="0">
+                      <xs:element name="Binding">
+                        <xs:complexType>
+                          <xs:attribute name="Field" type="xs:string" use="required" />
+                          <xs:attribute name="Source" type="xs:string" use="required" />
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:choice>
+                    <xs:attribute name="Type" use="required" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+
+
+        <xs:attribute type="xs:string" name="Key">
+          <xs:annotation>
+            <xs:documentation>This is internal name used when referencing in MonoBehaviour binding.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="Name">
+          <xs:annotation>
+            <xs:documentation>This will be name of the element in Unity hierarchy.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:float" name="Top">
+          <xs:annotation>
+            <xs:documentation>Distance to the top margin. It can only work if <b>AnchorY</b> is range.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:float" name="Bottom">
+          <xs:annotation>
+            <xs:documentation>Distance to the bottom margin. It can only work if <b>AnchorY</b> is range.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:float" name="Left">
+          <xs:annotation>
+            <xs:documentation>Distance to the left margin. It can only work if <b>AnchorX</b> is range.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:float" name="Right">
+          <xs:annotation>
+            <xs:documentation>Distance to the right margin. It can only work if <b>AnchorX</b> is range.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:boolean" name="Dock">
+          <xs:annotation>
+            <xs:documentation>Shortand for <b>AnchorX=(0, 1) AnchorY=(0, 1)</b>.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute type="xs:boolean" name="Active">
+          <xs:annotation>
+            <xs:documentation>GameObject.setActive</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute type="vec2" name="AnchorX" />
+        <xs:attribute type="vec2" name="AnchorY" />
+        <xs:attribute type="vec2" name="Pivot">
+          <xs:annotation>
+            <xs:documentation>The pivot of the element.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="Width" >
+          <xs:annotation>
+            <xs:documentation>The width of the element. It can only work if AnchorX is same, single value.</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:union memberTypes="xs:float widthheight"/>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="Height">
+          <xs:annotation>
+            <xs:documentation>The height of the element. It can only work if AnchorY is same, single value.</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:union memberTypes="xs:float widthheight"/>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="padding" name="Padding">
+          <xs:annotation>
+            <xs:documentation>Padding of the content inside. It is achieved by creating additional GameObject.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>    
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="Label">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:attribute type="color" name="Color" />
+        <xs:attribute type="xs:float" name="FontSize" />
+        <xs:attribute type="xs:string" name="Text" />
+        <xs:attribute name="FitSize">
+          <xs:annotation>
+            <xs:documentation>If true, the element will set its size to fit text, width, height, anchors will be ignored.</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:NMTOKEN">
+              <xs:enumeration value="horizontal" />
+              <xs:enumeration value="vertical" />
+              <xs:enumeration value="both" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="alignment" name="Align">
+          <xs:annotation>
+            <xs:documentation>Horizontal alignment of text.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="verticalalignment" name="VertAlign">
+          <xs:annotation>
+            <xs:documentation>Vertical alignment of text.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+      
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="RawImage">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:attribute type="color" name="Color" >
+          <xs:annotation>
+            <xs:documentation>Color of the image.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="Image" >
+          <xs:annotation>
+            <xs:documentation>Path to the image, relative to Assets/ folder</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Image">
+    <xs:complexContent>
+      <xs:extension base="RawImage">
+        <xs:attribute type="xs:boolean" name="PreserveAspect">
+          <xs:annotation>
+            <xs:documentation>If true, aspect ratio will be preserved.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Empty">
+    <xs:complexContent>
+      <xs:extension base="Element">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="VerticalOrHorizontalLayout">
+    <xs:complexContent>
+      <xs:extension base="Container">
+        <xs:attribute type="xs:boolean" name="ExpandWidth">
+          <xs:annotation>
+            <xs:documentation>If true, expands width of children to maximum possible size.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:boolean" name="FitSize">
+          <xs:annotation>
+            <xs:documentation>If true, its width/height (horizontal/vertical) will be set to fit all items.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:boolean" name="ExpandHeight">
+          <xs:annotation>
+            <xs:documentation>If true, expands height of children to maximum possible size.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:boolean" name="Flex">
+          <xs:annotation>
+            <xs:documentation>If true, all children will use LayoutElement, and `fill` option of width/height will be possible in children.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:float" name="Spacing">
+          <xs:annotation>
+            <xs:documentation>Space between each child of the element.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="padding" name="Padding">
+          <xs:annotation>
+            <xs:documentation>Padding of the content inside. It is achieved by creating additional GameObject.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="alignment" name="Align">
+          <xs:annotation>
+            <xs:documentation>Horizontal alignment of text.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="verticalalignment" name="VertAlign">
+          <xs:annotation>
+            <xs:documentation>Vertical alignment of text.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+
+  <xs:complexType name="VerticalLayout">
+    <xs:complexContent>
+      <xs:extension base="VerticalOrHorizontalLayout">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HorizontalLayout">
+    <xs:complexContent>
+      <xs:extension base="VerticalOrHorizontalLayout">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="Canvas">
+    <xs:complexContent>
+      <xs:extension base="Element">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="Scroll">
+    <xs:complexContent>
+      <xs:extension base="Element">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="ListView">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:choice minOccurs="1" maxOccurs="1">
+          <xs:element name="ListView.Element" type="Element">
+            
+          </xs:element>
+        </xs:choice>
+        <xs:attribute type="binding" name="Items" use="required">
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <!-- TYPES -->
+  <xs:simpleType name="alignment" final="restriction" >
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="left" />
+      <xs:enumeration value="middle" />
+      <xs:enumeration value="right" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="verticalalignment" final="restriction" >
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="top" />
+      <xs:enumeration value="middle" />
+      <xs:enumeration value="bottom" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="widthheight" final="restriction" >
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="fill" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="padding" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:pattern value='(\d+(\.\d+)?|\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?)'/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="vec2" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:pattern value='\(\d+(\.\d+)?, ?\d+(\.\d+)?\)'/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="vec3" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:pattern value='\(\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?\)'/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="vec4" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:pattern value='\(\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?\)'/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="color">
+    <xs:union memberTypes="vec3 vec4" />
+  </xs:simpleType>
+  
+  <xs:simpleType name="binding">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\{ ?Binding [a-zA-Z0-9_]+ ?(, ?Editor ?= ?(false|true))? ?\}" />
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="booleanOrBinding">
+    <xs:union memberTypes="xs:boolean binding" />
+  </xs:simpleType>
+
+  <xs:simpleType name="colorOrBinding">
+    <xs:union memberTypes="color binding" />
+  </xs:simpleType>
+</xs:schema>
