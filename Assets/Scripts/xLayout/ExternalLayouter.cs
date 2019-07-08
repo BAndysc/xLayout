@@ -1,12 +1,16 @@
 ﻿using System;
 using System.IO;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace xLayout
 {
     [ExecuteInEditMode]
+    #if UNITY_2018_3_OR_NEWER
     [ExecuteAlways]
+    #endif
     [Serializable]
     public class ExternalLayouter : MonoBehaviour
     {
@@ -53,14 +57,14 @@ namespace xLayout
         }
     }
 
-
+    #if UNITY_EDITOR
     [CustomEditor(typeof(ExternalLayouter))]
     public class ExternalLayouterEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             var layoutPath = serializedObject.FindProperty("layoutPath");
-
+    
             if (string.IsNullOrEmpty(layoutPath.stringValue))
             {
                 EditorGUILayout.HelpBox("Put layout file name with extension relative to Assets/ folder", MessageType.Info);
@@ -71,7 +75,7 @@ namespace xLayout
             }
             
             EditorGUILayout.PropertyField(layoutPath);
-
+    
             if (GUILayout.Button("Force reload"))
             {
                 (target as ExternalLayouter).Reload();
@@ -80,4 +84,5 @@ namespace xLayout
             serializedObject.ApplyModifiedProperties();
         }
     }
+    #endif
 }

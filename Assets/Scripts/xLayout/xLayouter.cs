@@ -47,6 +47,8 @@ namespace xLayout
             go.transform.parent = parent;
             go.transform.localScale = Vector3.one;
 
+            go.AddComponent<ExternalLayoutWarning>();
+
             newParent = go;
             
             if (element.Active == "false")
