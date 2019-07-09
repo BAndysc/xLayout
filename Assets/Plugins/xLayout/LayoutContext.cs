@@ -8,6 +8,14 @@ namespace xLayout
 {
     public class LayoutContext : IReadOnlyLayoutContext
     {
+        static LayoutContext()
+        {
+            System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+            System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+        }
+        
         private Dictionary<string, string> variables = new Dictionary<string, string>();
         private Dictionary<string, string> assets = new Dictionary<string, string>();
 

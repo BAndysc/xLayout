@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Canvas xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="urn:xLayout"
-        xsi:schemaLocation="urn:xLayout layout.xsd">
+        xsi:schemaLocation="urn:xLayout Plugins/xLayout/layout.xsd">
     
     <RawImage Dock="true" Color="(0.1, 0.2, 0.5)"  Name="Background" />
     
