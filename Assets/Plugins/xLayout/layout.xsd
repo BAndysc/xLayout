@@ -149,6 +149,7 @@
   <xs:complexType name="Label">
     <xs:complexContent>
       <xs:extension base="Element">
+        <xs:attribute type="xString" name="Font" />
         <xs:attribute type="xColor" name="Color" />
         <xs:attribute type="xFloat" name="FontSize" />
         <xs:attribute type="xs:string" name="Text" />
@@ -218,6 +219,16 @@
   <xs:complexType name="Prefab">
     <xs:complexContent>
       <xs:extension base="Element">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+          <xs:element name="Setter">
+            <xs:complexType>
+              <xs:attribute name="Path" type="xs:string" />
+              <xs:attribute name="Component" type="xs:string" use="required" />
+              <xs:attribute name="Field" type="xs:string" use="required" />
+              <xs:attribute name="Value" type="xString" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
         <xs:attribute type="xString" name="Path">
           <xs:annotation>
             <xs:documentation>Path to prefab asset.</xs:documentation>
