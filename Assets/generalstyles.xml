@@ -5,8 +5,25 @@
     
     <Variable Name="mainColor" Value="(0.8, 0.8, 0.8, 1)" />
     <Variable Name="fontColor" Value="(1, 0, 1, 1)" />
-    <!--<Style TargetType="Label">
-        <Setter Property="FontSize" Value="100"/>
-    </Style>-->
+
+    <Prefab Name="Button">
+        <Content>
+            <RawImage Color="{Resource kolortla}" Dock="fill" Name="Button preset" Key="Me">
+                <Image Image="{Resource img}" Dock="left" Width="100" PreserveAspect="true" Name="Image" />
+                <Label Left="100" Dock="fill" Text="{Resource Text}" FontSize="{Resource FontSize}" Name="Label" />
+                <Components>
+                    <Component Type="Button"/>
+                    <Component Type="Test">
+                        <Binding Field="btn" Source="Me" />
+                    </Component>
+                </Components>
+            </RawImage>
+        </Content>
+        <Properties>
+            <Property Name="img" Required="false" Default="Images/circ.png" />
+            <Property Name="Text" Required="true" Default="Default label" />
+            <Property Name="FontSize" Required="false" Default="120" />
+        </Properties>
+    </Prefab>
     
 </Resources>

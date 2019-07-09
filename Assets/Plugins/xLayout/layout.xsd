@@ -103,7 +103,7 @@
             <xs:documentation>Distance to the right margin. It can only work if <b>AnchorX</b> is range.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xBool" name="Dock">
+        <xs:attribute type="xDock" name="Dock">
           <xs:annotation>
             <xs:documentation>Shortand for <b>AnchorX=(0, 1) AnchorY=(0, 1)</b>.</xs:documentation>
           </xs:annotation>
@@ -485,6 +485,15 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="dock" final="restriction">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="right"/>
+      <xs:enumeration value="top"/>
+      <xs:enumeration value="bottom"/>
+      <xs:enumeration value="fill"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="xString">
     <xs:union memberTypes="xs:string resource" />
   </xs:simpleType>
@@ -499,6 +508,9 @@
   </xs:simpleType>
   <xs:simpleType name="xBool">
     <xs:union memberTypes="xs:boolean resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xDock">
+    <xs:union memberTypes="dock resource" />
   </xs:simpleType>
   <xs:simpleType name="xVec2">
     <xs:union memberTypes="vec2 resource" />

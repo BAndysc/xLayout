@@ -172,8 +172,11 @@ namespace xLayout
             ApplyTransformSettings(element, parent, context, go);
 
             if (originalElement != null)
+            {
                 ApplyTransformSettings(originalElement, parent, context, go);
-
+                if (!string.IsNullOrEmpty(originalElement.Name))
+                    go.name = originalElement.Name;
+            }
             return go;
         }
 
@@ -181,12 +184,35 @@ namespace xLayout
             IReadOnlyLayoutContext context, GameObject go)
         {
             var rect = go.GetComponent<RectTransform>();
-            
-            if (context.ParseBool(element.Dock))
-            {
-                element.AnchorX = element.AnchorY = "(0, 1)";
-            }
 
+            var dock = context.ParseString(element.Dock);
+            if (dock == "fill")
+                element.AnchorX = element.AnchorY = "(0, 1)";
+            else if (dock == "left")
+            {
+                element.AnchorX = "(0, 0)";
+                element.AnchorY = "(0, 1)";
+                element.Pivot = "(0, 0.5)";
+            }
+            else if (dock == "right")
+            {
+                element.AnchorX = "(1, 1)";
+                element.AnchorY = "(0, 1)";
+                element.Pivot = "(1, 0.5)";
+            }
+            else if (dock == "top")
+            {
+                element.AnchorX = "(0, 1)";
+                element.AnchorY = "(1, 1)";
+                element.Pivot = "(0.5, 1)";
+            }
+            else if (dock == "bottom")
+            {
+                element.AnchorX = "(0, 1)";
+                element.AnchorY = "(0, 0)";
+                element.Pivot = "(0.5, 0)";
+            }
+             
             if (!string.IsNullOrEmpty(element.AnchorX))
             {
                 rect.anchorMin = new Vector2(context.ParseVector2(element.AnchorX).x, rect.anchorMin.y);
@@ -278,6 +304,8 @@ namespace xLayout
         private static Dictionary<string, GameObject> Deserialize(BaseElement element, GameObject gameObject, IReadOnlyLayoutContext context)
         {
             GameObject parent = gameObject;
+            Dictionary<string, GameObject> byKeys = new Dictionary<string, GameObject>();
+            
             if (element is RectTransformElement rte)
             {
                 gameObject = CreateElement(rte, gameObject.transform, context, out parent);
@@ -287,6 +315,9 @@ namespace xLayout
                 var prefabElement = context.GetPrefab(prefab.Prefab);
                 if (prefabElement != null)
                 {
+                    if (!string.IsNullOrEmpty(prefab.Key))
+                        byKeys[prefab.Key] = gameObject;
+                    
                     if ((prefabElement.Properties?.Count ?? 0) > 0 || (prefab.Properties?.Count ?? 0) > 0)
                     {
                         var newContext = new LayoutContext();
@@ -312,7 +343,6 @@ namespace xLayout
                 }
             }
 
-
             var oldParent = parent;
             var constructor = Constructors.GetConstructor(element.GetType());
             parent = constructor.Install(gameObject, element, context);
@@ -320,13 +350,14 @@ namespace xLayout
             if (parent != gameObject)
                 oldParent = parent;
             
-            Dictionary<string, GameObject> byKeys = new Dictionary<string, GameObject>();
-    
             foreach (var subElement in element.Elements)
             {
                 var keys = Deserialize(subElement, oldParent, context);
-                foreach (var key in keys)
-                    byKeys[key.Key] = key.Value;
+                if (!(element is PrefabElement))
+                {
+                    foreach (var key in keys)
+                        byKeys[key.Key] = key.Value;   
+                }
             }
     
             if (element is RectTransformElement rte_)

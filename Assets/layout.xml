@@ -3,12 +3,12 @@
         xmlns="urn:xLayout"
         xsi:schemaLocation="urn:xLayout Plugins/xLayout/layout.xsd">
     
-    <RawImage Dock="true" Color="(0.1, 0.2, 0.5)"  Name="Background" />
+    <RawImage Dock="fill" Color="(0.1, 0.2, 0.5)"  Name="Background" />
     
     <RawImage AnchorX="(0, 1)" AnchorY="(1, 1)" Height="160" Pivot="(0.5, 1)" Color="(0, 0, 0, 0.4)" Name="TopBar">
         <HorizontalLayout ExpandHeight="true" Flex="true">
             <RawImage Width="320" Color="(0, 0, 0, 0.2)" Name="Element">
-                <GameObject Path="prefab.prefab" Dock="true" Left="10" Name="moj prefab">
+                <GameObject Path="prefab.prefab" Dock="fill" Left="10" Name="moj prefab">
                     <Setter Component="Test" Field="Text" Value="aaa" Path=""/>
                 </GameObject>
             </RawImage>
@@ -21,12 +21,13 @@
                     <Image PreserveAspect="true" Width="150" Image="Images/emptycirc.png" />
                 </HorizontalLayout>
             </Empty>
-            <Prefab Prefab="Button" Width="420">
-                <Property Name="Text" Value="Moj button" />
+            <Prefab Prefab="Button" Width="420" Name="Btn" Key="aaa">
+                <Property Name="Text" Value="The prefab" />
                 <Property Name="FontSize" Value="60" />
+                <Property Name="img" Value="Images/emptycirc.png" />
             </Prefab>
             <RawImage Width="420" Color="(0, 0, 0, 0.2)" Key="Time">
-                <Label Text="24:00" Dock="true" Color="(1, 1, 1)" FontSize="40" Key="ada" Name="Timer">
+                <Label Text="24:00" Dock="fill" Color="(1, 1, 1)" FontSize="40" Key="ada" Name="Timer">
                     <Components>
                         <Component Type="xLayout.Example.Timer">
                             <Binding Field="obj" Source="{this}" />
@@ -36,26 +37,31 @@
                 </Label>
             </RawImage>
         </HorizontalLayout>
+        <Components>
+            <Component Type="Test">
+                <Binding Field="btn" Source="aaa" />
+            </Component>
+        </Components>
     </RawImage>
     
     <Empty AnchorY="(0, 1)" Top="160" AnchorX="(1, 1)" Width="800" Pivot="(1, 0.5)" Name="Sidebar">
-        <RawImage Dock="true" Right="40" Color="(0, 0, 0, 0.2)" Name="Margin">
+        <RawImage Dock="fill" Right="40" Color="(0, 0, 0, 0.2)" Name="Margin">
             
             <VerticalLayout ExpandWidth="true" Spacing="60" Padding="50, 0, 0, 0" VertAlign="top">
                 <RawImage Color="{Resource fontColor}" Height="100" Name="Header">
-                    <Label Text="{Resource kolortla}" FontSize="50" Color="(1, 1, 1)" Dock="true" Name="Text" />
+                    <Label Text="{Resource kolortla}" FontSize="50" Color="(1, 1, 1)" Dock="fill" Name="Text" />
                 </RawImage>
                 <Label Color="(1, 1, 1)" FontSize="50"  FitSize="vertical" Text="Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet." Name="Description" />
                 <RawImage Material="{Resource mat}" Height="120" Name="Header">
-                    <Label Text="About" Color="(1, 1, 1)" Dock="true" FontSize="50" Name="Text"  />
+                    <Label Text="About" Color="(1, 1, 1)" Dock="fill" FontSize="50" Name="Text"  />
                 </RawImage>
                 <Label Color="(1, 1, 1)" FitSize="vertical" Text="Lorem ipsum dolor sit amet." FontSize="50" Name="Description" />
             </VerticalLayout>
         </RawImage>
     </Empty>
     
-    <Empty Dock="true" Top="260" Right="900" Left="100" Bottom="100" Name="Content">
-        <RawImage Color="(0, 0, 0, 0.25)" Dock="true" Name="Scroll">
+    <Empty Dock="fill" Top="260" Right="900" Left="100" Bottom="100" Name="Content">
+        <RawImage Color="(0, 0, 0, 0.25)" Dock="fill" Name="Scroll">
             <Scroll>
                 <ListView Items="{Binding items}" AnchorX="(0, 1)" AnchorY="(1, 1)" Pivot="(0.5, 1)">
                     <VerticalLayout ExpandWidth="true" VertAlign="top" Spacing="40" FitSize="true">
@@ -63,7 +69,7 @@
                     <ListView.Element>
                         <RawImage Name="Element" Color="(1, 1, 1, 0.4)" Height="150">
                             <RawImage Width="150" Height="150" AnchorX="(0, 0)" AnchorY="(1, 1)" Pivot="(0, 1)" Color="(1, 0, 0)" />
-                            <Label Text="Text" Dock="true" Left="170" FontSize="70" Color="(1, 1, 1)" Align="left" />
+                            <Label Text="Text" Dock="fill" Left="170" FontSize="70" Color="(1, 1, 1)" Align="left" />
                             <ListView Items="{Binding Items}" AnchorX="(1, 1)" Pivot="(1, 0.5)" AnchorY="(0, 1)" Width="300">
                                 <HorizontalLayout Spacing="20">
                                     
@@ -79,7 +85,7 @@
         </RawImage>
     </Empty>
 
-    <RawImage Dock="true" Color="(0, 0, 0.3, 1)" Active="false" Name="overlay">
+    <RawImage Dock="fill" Color="(0, 0, 0.3, 1)" Active="false" Name="overlay">
         <RawImage Width="1100" Height="800" Color="(0, 0, 0, 0.8)" Name="Background" Padding="30">
             <VerticalLayout ExpandWidth="true" Flex="true">
                 <Label Text="This is box" Color="(1, 1, 1)" FontSize="120" FitSize="vertical"/>
@@ -87,7 +93,7 @@
                 <Empty Height="200" Padding="16, 16, 16, 16" >
                     <HorizontalLayout Align="right" ExpandHeight="true">
                         <RawImage Width="280" Color="(1, 0, 0)">
-                            <Label Dock="true" Color="(1, 1, 1)" Text="Close" FontSize="80" />
+                            <Label Dock="fill" Color="(1, 1, 1)" Text="Close" FontSize="80" />
                         </RawImage>
                     </HorizontalLayout>
                 </Empty>
@@ -99,19 +105,5 @@
         <Include Path="generalstyles.xml" />
         <Variable Name="kolortla" Value="(0, 1, 0, 0.5)" />
         <Asset Name="mat" Path="material.mat" />
-        <Prefab Name="Button">
-            <Content>
-                <RawImage Color="{Resource kolortla}" Dock="true">
-                    <Label Dock="true" Text="{Resource Text}" FontSize="{Resource FontSize}"/>
-                    <Components>
-                        <Component Type="Button"/>
-                    </Components>
-                </RawImage>
-            </Content>
-            <Properties>
-                <Property Name="Text" Required="true" Default="Default label" />
-                <Property Name="FontSize" Required="false" Default="120" />
-            </Properties>
-        </Prefab>
     </Resources>
 </Canvas>
