@@ -7,15 +7,15 @@ namespace xLayout.TypesConstructors
 {
     public class LabelConstructor : TypeConstructor<LabelElement>
     {
-        protected override GameObject Install(GameObject go, LabelElement element)
+        protected override GameObject Install(GameObject go, LabelElement element, IReadOnlyLayoutContext context)
         {
             var rect = go.GetComponent<RectTransform>();
             var oldOffsetMin = rect.offsetMin;
             var oldOffsetMax = rect.offsetMax;
             
             var textMesh = go.AddComponent<TextMeshProUGUI>();
-            textMesh.text = element.Text;
-            textMesh.fontSize = element.FontSize;
+            textMesh.text = context.ParseString(element.Text);
+            textMesh.fontSize = context.ParseFloat(element.FontSize);
 
             if (string.IsNullOrEmpty(element.Align))
                 element.Align = "middle";
@@ -27,7 +27,7 @@ namespace xLayout.TypesConstructors
             if (alignment.HasValue)
                 textMesh.alignment = alignment.Value;
 
-            textMesh.color = ParseUtils.ParseColor(element.Color);
+            textMesh.color = context.ParseColor(element.Color);
 
             if (!string.IsNullOrEmpty(element.FitSize))
             {

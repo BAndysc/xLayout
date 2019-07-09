@@ -9,5 +9,8 @@ namespace xLayout.Definitions
     
         [XmlAttribute]
         public string Image { get; set; }
+        
+        [XmlAttribute]
+        public string Material { get; set; }
     }
 }

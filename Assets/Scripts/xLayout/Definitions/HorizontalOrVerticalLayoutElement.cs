@@ -14,25 +14,18 @@ namespace xLayout.Definitions
         public string Padding { get; set; }
     
         [XmlAttribute]
-        public bool ExpandWidth { get; set; }
+        public string ExpandWidth { get; set; }
     
         [XmlAttribute]
-        public bool ExpandHeight { get; set; }
+        public string ExpandHeight { get; set; }
     
         [XmlAttribute]
-        public bool FitSize { get; set; }
+        public string FitSize { get; set; }
 
         [XmlAttribute]
-        public float Spacing { get; set; }
+        public string Spacing { get; set; }
     
-        [XmlIgnore]
-        public bool? Flex { get; set; }
-
-        [XmlAttribute("Flex")]
-        public bool Flex_
-        {
-            get => Flex ?? false;
-            set => Flex = value;
-        }
+        [XmlAttribute]
+        public string Flex { get; set; }
     }
 }

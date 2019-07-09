@@ -6,7 +6,7 @@ namespace xLayout.TypesConstructors
 {
     public class ScrollConstructor : TypeConstructor<ScrollElement>
     {
-        protected override GameObject Install(GameObject go, ScrollElement element)
+        protected override GameObject Install(GameObject go, ScrollElement element, IReadOnlyLayoutContext context)
         {
             var scroll = go.AddComponent<ScrollRect>();
             var viewPort = new GameObject($"Viewport ({go.name})");
@@ -23,8 +23,6 @@ namespace xLayout.TypesConstructors
             viewPortRect.offsetMax =
                 viewPortRect.offsetMin = Vector2.zero;
             
-            //trans = viewPortRect;
-
             scroll.viewport = viewPortRect;
 
             var mask = viewPort.gameObject.AddComponent<RectMask2D>();
@@ -32,7 +30,7 @@ namespace xLayout.TypesConstructors
             return viewPort;
         }
 
-        protected override void PostInstall(GameObject go, ScrollElement element)
+        protected override void PostInstall(GameObject go, ScrollElement element, IReadOnlyLayoutContext context)
         {
             if (go.transform.childCount != 1 || go.transform.GetChild(0).childCount != 1)
                 Debug.LogError("Scroll element should have exactly one child");

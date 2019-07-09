@@ -11,6 +11,9 @@ namespace xLayout.Definitions
         public string Image { get; set; }
     
         [XmlAttribute]
-        public bool PreserveAspect { get; set; }
+        public string PreserveAspect { get; set; }
+        
+        [XmlAttribute]
+        public string Material { get; set; }
     }
 }

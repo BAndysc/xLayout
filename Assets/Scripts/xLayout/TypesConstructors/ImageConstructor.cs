@@ -7,12 +7,13 @@ namespace xLayout.TypesConstructors
 {
     public class ImageConstructor : TypeConstructor<ImageElement>
     {
-        protected override GameObject Install(GameObject go, ImageElement element)
+        protected override GameObject Install(GameObject go, ImageElement element, IReadOnlyLayoutContext context)
         {
             var img = go.AddComponent<Image>();
-            img.color = ParseUtils.ParseColor(element.Color);
-            img.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/" + element.Image);
-            img.preserveAspect = element.PreserveAspect;
+            img.color = context.ParseColor(element.Color);
+            img.sprite = context.GetAsset<Sprite>(element.Image);
+            img.preserveAspect = context.ParseBool(element.PreserveAspect);
+            img.material = context.GetAsset<Material>(element.Material);
 
             return go;
         }

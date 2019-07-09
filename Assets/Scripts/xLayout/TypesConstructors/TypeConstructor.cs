@@ -8,27 +8,27 @@ namespace xLayout.TypesConstructors
     {
         public abstract Type ConstructedType { get; }
 
-        public abstract GameObject Install(GameObject gameObject, BaseElement element);
+        public abstract GameObject Install(GameObject gameObject, BaseElement element, IReadOnlyLayoutContext context);
         
-        public abstract void PostInstall(GameObject gameObject, BaseElement element);
+        public abstract void PostInstall(GameObject gameObject, BaseElement element, IReadOnlyLayoutContext context);
     }
     
     public abstract class TypeConstructor<T> : TypeConstructor where T : BaseElement
     {
         public override Type ConstructedType => typeof(T);
 
-        public override GameObject Install(GameObject gameObject, BaseElement element)
+        public override GameObject Install(GameObject gameObject, BaseElement element, IReadOnlyLayoutContext context)
         {
-            return Install(gameObject, element as T);
+            return Install(gameObject, element as T, context);
         }
         
-        public override void PostInstall(GameObject gameObject, BaseElement element)
+        public override void PostInstall(GameObject gameObject, BaseElement element, IReadOnlyLayoutContext context)
         {
-            PostInstall(gameObject, element as T);
+            PostInstall(gameObject, element as T, context);
         }
 
-        protected abstract GameObject Install(GameObject go, T element);
+        protected abstract GameObject Install(GameObject go, T element, IReadOnlyLayoutContext context);
         
-        protected virtual void PostInstall(GameObject go, T element) { }
+        protected virtual void PostInstall(GameObject go, T element, IReadOnlyLayoutContext context) { }
     }
 }

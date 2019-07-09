@@ -7,12 +7,13 @@ namespace xLayout.TypesConstructors
 {
     public class RawImageConstructor : TypeConstructor<RawImageElement>
     {
-        protected override GameObject Install(GameObject go, RawImageElement element)
+        protected override GameObject Install(GameObject go, RawImageElement element, IReadOnlyLayoutContext context)
         {
             var img = go.AddComponent<RawImage>();
 
-            img.color = ParseUtils.ParseColor(element.Color);
-            img.texture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/" + element.Image);
+            img.color = context.ParseColor(element.Color);
+            img.texture = context.GetAsset<Texture2D>(element.Image);
+            img.material = context.GetAsset<Material>(element.Material);
 
             return go;
         }

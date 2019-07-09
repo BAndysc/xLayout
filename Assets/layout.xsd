@@ -3,7 +3,7 @@
            targetNamespace="urn:xLayout"
            xmlns="urn:xLayout"
            elementFormDefault="qualified">
-  <xs:element name="Canvas" type="Canvas" />  
+  <xs:element name="Canvas" type="Canvas" />
   <xs:complexType name="Container">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:element type="Label" name="Label">
@@ -81,41 +81,41 @@
             <xs:documentation>This will be name of the element in Unity hierarchy.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:float" name="Top">
+        <xs:attribute type="xFloat" name="Top">
           <xs:annotation>
             <xs:documentation>Distance to the top margin. It can only work if <b>AnchorY</b> is range.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:float" name="Bottom">
+        <xs:attribute type="xFloat" name="Bottom">
           <xs:annotation>
             <xs:documentation>Distance to the bottom margin. It can only work if <b>AnchorY</b> is range.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:float" name="Left">
+        <xs:attribute type="xFloat" name="Left">
           <xs:annotation>
             <xs:documentation>Distance to the left margin. It can only work if <b>AnchorX</b> is range.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:float" name="Right">
+        <xs:attribute type="xFloat" name="Right">
           <xs:annotation>
             <xs:documentation>Distance to the right margin. It can only work if <b>AnchorX</b> is range.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:boolean" name="Dock">
+        <xs:attribute type="xBool" name="Dock">
           <xs:annotation>
             <xs:documentation>Shortand for <b>AnchorX=(0, 1) AnchorY=(0, 1)</b>.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
 
-        <xs:attribute type="xs:boolean" name="Active">
+        <xs:attribute type="xBool" name="Active">
           <xs:annotation>
             <xs:documentation>GameObject.setActive</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         
-        <xs:attribute type="vec2" name="AnchorX" />
-        <xs:attribute type="vec2" name="AnchorY" />
-        <xs:attribute type="vec2" name="Pivot">
+        <xs:attribute type="xVec2" name="AnchorX" />
+        <xs:attribute type="xVec2" name="AnchorY" />
+        <xs:attribute type="xVec2" name="Pivot">
           <xs:annotation>
             <xs:documentation>The pivot of the element.</xs:documentation>
           </xs:annotation>
@@ -125,7 +125,7 @@
             <xs:documentation>The width of the element. It can only work if AnchorX is same, single value.</xs:documentation>
           </xs:annotation>
           <xs:simpleType>
-            <xs:union memberTypes="xs:float widthheight"/>
+            <xs:union memberTypes="xFloat widthheight"/>
           </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="Height">
@@ -133,10 +133,10 @@
             <xs:documentation>The height of the element. It can only work if AnchorY is same, single value.</xs:documentation>
           </xs:annotation>
           <xs:simpleType>
-            <xs:union memberTypes="xs:float widthheight"/>
+            <xs:union memberTypes="xFloat widthheight"/>
           </xs:simpleType>
         </xs:attribute>
-        <xs:attribute type="padding" name="Padding">
+        <xs:attribute type="xPadding" name="Padding">
           <xs:annotation>
             <xs:documentation>Padding of the content inside. It is achieved by creating additional GameObject.</xs:documentation>
           </xs:annotation>
@@ -148,8 +148,8 @@
   <xs:complexType name="Label">
     <xs:complexContent>
       <xs:extension base="Element">
-        <xs:attribute type="color" name="Color" />
-        <xs:attribute type="xs:float" name="FontSize" />
+        <xs:attribute type="xColor" name="Color" />
+        <xs:attribute type="xFloat" name="FontSize" />
         <xs:attribute type="xs:string" name="Text" />
         <xs:attribute name="FitSize">
           <xs:annotation>
@@ -182,9 +182,14 @@
   <xs:complexType name="RawImage">
     <xs:complexContent>
       <xs:extension base="Element">
-        <xs:attribute type="color" name="Color" >
+        <xs:attribute type="xColor" name="Color" >
           <xs:annotation>
             <xs:documentation>Color of the image.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xString" name="Material" >
+          <xs:annotation>
+            <xs:documentation>Material of the image.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute type="xs:string" name="Image" >
@@ -199,7 +204,7 @@
   <xs:complexType name="Image">
     <xs:complexContent>
       <xs:extension base="RawImage">
-        <xs:attribute type="xs:boolean" name="PreserveAspect">
+        <xs:attribute type="xBool" name="PreserveAspect">
           <xs:annotation>
             <xs:documentation>If true, aspect ratio will be preserved.</xs:documentation>
           </xs:annotation>
@@ -218,32 +223,32 @@
   <xs:complexType name="VerticalOrHorizontalLayout">
     <xs:complexContent>
       <xs:extension base="Container">
-        <xs:attribute type="xs:boolean" name="ExpandWidth">
+        <xs:attribute type="xBool" name="ExpandWidth">
           <xs:annotation>
             <xs:documentation>If true, expands width of children to maximum possible size.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:boolean" name="FitSize">
+        <xs:attribute type="xBool" name="FitSize">
           <xs:annotation>
             <xs:documentation>If true, its width/height (horizontal/vertical) will be set to fit all items.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:boolean" name="ExpandHeight">
+        <xs:attribute type="xBool" name="ExpandHeight">
           <xs:annotation>
             <xs:documentation>If true, expands height of children to maximum possible size.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:boolean" name="Flex">
+        <xs:attribute type="xBool" name="Flex">
           <xs:annotation>
             <xs:documentation>If true, all children will use LayoutElement, and `fill` option of width/height will be possible in children.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:float" name="Spacing">
+        <xs:attribute type="xFloat" name="Spacing">
           <xs:annotation>
             <xs:documentation>Space between each child of the element.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute type="padding" name="Padding">
+        <xs:attribute type="xPadding" name="Padding">
           <xs:annotation>
             <xs:documentation>Padding of the content inside. It is achieved by creating additional GameObject.</xs:documentation>
           </xs:annotation>
@@ -280,7 +285,29 @@
 
   <xs:complexType name="Canvas">
     <xs:complexContent>
-      <xs:extension base="Element">
+      <xs:extension base="Container">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Resources">
+            <xs:complexType>
+              <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Variable">
+                  <xs:complexType>
+                    <xs:attribute name="Name" type="xs:string" use="required"/>
+                    <xs:attribute name="Value" type="xs:string" use="required"/>
+                  </xs:complexType>
+                </xs:element>
+
+                  <xs:element name="Asset">
+                      <xs:complexType>
+                          <xs:attribute name="Name" type="xs:string" use="required"/>
+                          <xs:attribute name="Path" type="xs:string" use="required"/>
+                      </xs:complexType>
+                  </xs:element>
+                  
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>        
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -359,6 +386,46 @@
     <xs:union memberTypes="vec3 vec4" />
   </xs:simpleType>
   
+
+
+  <xs:simpleType name="resource">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\{ ?Resource [a-zA-Z0-9_]+ ?\}" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="xString">
+    <xs:union memberTypes="xs:string resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xColor">
+    <xs:union memberTypes="color resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xInt">
+    <xs:union memberTypes="xs:integer resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xFloat">
+    <xs:union memberTypes="xs:float resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xBool">
+    <xs:union memberTypes="xs:boolean resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xVec2">
+    <xs:union memberTypes="vec2 resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xVec3">
+    <xs:union memberTypes="vec3 resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xVec4">
+    <xs:union memberTypes="vec4 resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xVec34">
+    <xs:union memberTypes="vec3 vec4 resource" />
+  </xs:simpleType>
+  <xs:simpleType name="xPadding">
+    <xs:union memberTypes="padding resource" />
+  </xs:simpleType>
+
+  <!-- Bindings (not used now -->
   <xs:simpleType name="binding">
     <xs:restriction base="xs:string">
       <xs:pattern value="\{ ?Binding [a-zA-Z0-9_]+ ?(, ?Editor ?= ?(false|true))? ?\}" />

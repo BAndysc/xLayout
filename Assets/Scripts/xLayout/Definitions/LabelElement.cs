@@ -11,7 +11,7 @@ namespace xLayout.Definitions
         public string Align { get; set; }
 
         [XmlAttribute] 
-        public float FontSize { get; set; } = 20;
+        public string FontSize { get; set; } = "20";
 
         [XmlAttribute]
         public string VertAlign { get; set; }

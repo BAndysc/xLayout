@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -29,19 +30,35 @@ namespace xLayout
             StreamReader reader = new StreamReader(xmlFile);
             var canvas = (CanvasDefinition)serializer.Deserialize(reader);
 
+            LayoutContext context = new LayoutContext();
+            ParseResources(context, canvas.Resources);
+            
             KillAllChildren(parent);
 
-            BuildLayout(parent, canvas.Elements);
+            BuildLayout(parent, canvas.Elements, context);
             reader.Close();            
         }
-        
+
+        private static void ParseResources(LayoutContext context, List<ResourceElement> canvasResources)
+        {
+            foreach (var resource in canvasResources)
+            {
+                if (resource is ResourceVariableElement variableElement)
+                    context.AddVariable(resource.Name, variableElement.Value);
+                else if (resource is ResourceAssetElement assetElement)
+                    context.AddAsset(resource.Name, assetElement.Path);
+                else
+                    throw new NotImplementedException();
+            }
+        }
+
         private static void KillAllChildren(GameObject gameObject)
         {
             while (gameObject.transform.childCount > 0)
                 Object.DestroyImmediate(gameObject.transform.GetChild(0).gameObject);
         }
         
-        private static GameObject CreateElement(RectTransformElement element, Transform parent, out GameObject newParent)
+        private static GameObject CreateElement(RectTransformElement element, Transform parent, IReadOnlyLayoutContext context, out GameObject newParent)
         {
             GameObject go = new GameObject(element.Name);
             go.transform.parent = parent;
@@ -58,7 +75,7 @@ namespace xLayout
     
             if (!string.IsNullOrEmpty(element.Padding))
             {
-                var padding = ParseUtils.ParsePadding(element.Padding);
+                var padding = context.ParsePadding(element.Padding);
                 GameObject padder = new GameObject();
                 padder.name = $"Padding ({go.name})";
                 padder.transform.parent = childParent;
@@ -78,54 +95,59 @@ namespace xLayout
     
             if (rect == null)
                 rect = go.AddComponent<RectTransform>();
-                
+
+            if (context.ParseBool(element.Dock))
+            {
+                element.AnchorX = element.AnchorY = "(0, 1)";
+            }
+            
             if (!string.IsNullOrEmpty(element.AnchorX))
             {
-                rect.anchorMin = new Vector2(ParseUtils.ParseVector2(element.AnchorX).x, rect.anchorMin.y);
-                rect.anchorMax = new Vector2(ParseUtils.ParseVector2(element.AnchorX).y, rect.anchorMax.y);
+                rect.anchorMin = new Vector2(context.ParseVector2(element.AnchorX).x, rect.anchorMin.y);
+                rect.anchorMax = new Vector2(context.ParseVector2(element.AnchorX).y, rect.anchorMax.y);
             }
                 
             if (!string.IsNullOrEmpty(element.AnchorY))
             {
-                rect.anchorMin = new Vector2(rect.anchorMin.x, ParseUtils.ParseVector2(element.AnchorY).x);
-                rect.anchorMax = new Vector2(rect.anchorMax.x, ParseUtils.ParseVector2(element.AnchorY).y);
+                rect.anchorMin = new Vector2(rect.anchorMin.x, context.ParseVector2(element.AnchorY).x);
+                rect.anchorMax = new Vector2(rect.anchorMax.x, context.ParseVector2(element.AnchorY).y);
             }
     
             if (!string.IsNullOrEmpty(element.Pivot))
-                rect.pivot = ParseUtils.ParseVector2(element.Pivot);
+                rect.pivot = context.ParseVector2(element.Pivot);
     
             rect.offsetMax = new Vector2(0, 0);
             rect.offsetMin = Vector2.zero;
     
-            if (element.Top.HasValue)
+            if (!string.IsNullOrEmpty(element.Top))
             {
                 if (Mathf.Abs(rect.anchorMin.y - rect.anchorMax.y) > 0.01f)
-                    rect.offsetMax = new Vector2(rect.offsetMax.x, -element.Top.Value);
+                    rect.offsetMax = new Vector2(rect.offsetMax.x, -context.ParseFloat(element.Top));
                 else
                     Debug.LogError("Property Top cannot work if AnchorY is single value");
             }
             
-            if (element.Bottom.HasValue)
+            if (!string.IsNullOrEmpty(element.Bottom))
             {
                 if (Mathf.Abs(rect.anchorMin.y - rect.anchorMax.y) > 0.01f)
-                    rect.offsetMin = new Vector2(rect.offsetMin.x, element.Bottom.Value);
+                    rect.offsetMin = new Vector2(rect.offsetMin.x, context.ParseFloat(element.Bottom));
                 else
                     Debug.LogError("Property Bottom cannot work if AnchorY is single value");
             }
             
             
-            if (element.Left.HasValue)
+            if (!string.IsNullOrEmpty(element.Left))
             {
                 if (Mathf.Abs(rect.anchorMin.x - rect.anchorMax.x) > 0.01f)
-                    rect.offsetMin = new Vector2(element.Left.Value, rect.offsetMin.y);
+                    rect.offsetMin = new Vector2(context.ParseFloat(element.Left), rect.offsetMin.y);
                 else
                     Debug.LogError("Property Left cannot work if AnchorX is single value");
             }
             
-            if (element.Right.HasValue)
+            if (!string.IsNullOrEmpty(element.Right))
             {
                 if (Mathf.Abs(rect.anchorMin.x - rect.anchorMax.x) > 0.01f)
-                    rect.offsetMax = new Vector2(-element.Right.Value, rect.offsetMax.y);
+                    rect.offsetMax = new Vector2(-context.ParseFloat(element.Right), rect.offsetMax.y);
                 else
                     Debug.LogError("Property Right cannot work if AnchorX is single value");
             }
@@ -138,10 +160,10 @@ namespace xLayout
                     if (element.Width == "fill")
                         layoutElement.flexibleWidth = 1;
                     else
-                        layoutElement.minWidth = float.Parse(element.Width);
+                        layoutElement.minWidth = context.ParseFloat(element.Width);
                 }
                 else
-                    rect.sizeDelta = new Vector2(float.Parse(element.Width), rect.sizeDelta.y);
+                    rect.sizeDelta = new Vector2(context.ParseFloat(element.Width), rect.sizeDelta.y);
             }
 
             if (!string.IsNullOrEmpty(element.Height))
@@ -152,34 +174,34 @@ namespace xLayout
                     if (element.Height == "fill")
                         layoutElement.flexibleHeight= 1;
                     else
-                        layoutElement.minHeight = float.Parse(element.Height);
+                        layoutElement.minHeight = context.ParseFloat(element.Height);
                 }
                 else
-                    rect.sizeDelta = new Vector2(rect.sizeDelta.x, float.Parse(element.Height));
+                    rect.sizeDelta = new Vector2(rect.sizeDelta.x, context.ParseFloat(element.Height));
             }
     
             return go;
         }
 
-        public static void BuildLayout(GameObject parent, IEnumerable<BaseElement> children)
+        public static void BuildLayout(GameObject parent, IEnumerable<BaseElement> children, IReadOnlyLayoutContext context)
         {
             foreach (var child in children)
             {
-                Deserialize(child, parent);
+                Deserialize(child, parent, context);
             }
         }
         
-        private static Dictionary<string, GameObject> Deserialize(BaseElement element, GameObject gameObject)
+        private static Dictionary<string, GameObject> Deserialize(BaseElement element, GameObject gameObject, IReadOnlyLayoutContext context)
         {
             GameObject parent = gameObject;
             if (element is RectTransformElement rte)
             {
-                gameObject = CreateElement(rte, gameObject.transform, out parent);
+                gameObject = CreateElement(rte, gameObject.transform, context, out parent);
             }
 
             var oldParent = parent;
             var constructor = Constructors.GetConstructor(element.GetType());
-            parent = constructor.Install(gameObject, element);
+            parent = constructor.Install(gameObject, element, context);
 
             if (parent != gameObject)
                 oldParent = parent;
@@ -188,7 +210,7 @@ namespace xLayout
     
             foreach (var subElement in element.Elements)
             {
-                var keys = Deserialize(subElement, oldParent);
+                var keys = Deserialize(subElement, oldParent, context);
                 foreach (var key in keys)
                     byKeys[key.Key] = key.Value;
             }
@@ -198,7 +220,7 @@ namespace xLayout
                 InstallComponents(rte_, gameObject, byKeys);
             }
             
-            constructor.PostInstall(gameObject, element);
+            constructor.PostInstall(gameObject, element, context);
             
             return byKeys;
         }
@@ -248,7 +270,7 @@ namespace xLayout
                     continue;
                 }
     
-                if (field.FieldType.IsSubclassOf(typeof(MonoBehaviour)))
+                if (field.FieldType.IsSubclassOf(typeof(Component)))
                 {
                     var sourceComponent = source.GetComponent((System.Type)field.FieldType);
     

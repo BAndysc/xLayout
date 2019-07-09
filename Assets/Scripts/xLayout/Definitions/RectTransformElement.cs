@@ -31,52 +31,16 @@ namespace xLayout.Definitions
 
         [XmlAttribute] public string Active { get; set; }
        
-        [XmlIgnore] public float? Top { get; set; }
+        [XmlAttribute] public string Top { get; set; }
     
-        [XmlAttribute("Top")]
-        public float TopBacking
-        {
-            get => Top ?? 0;
-            set => Top = value;
-        }
+        [XmlAttribute] public string Bottom { get; set; }
     
-        [XmlIgnore] public float? Bottom { get; set; }
+        [XmlAttribute] public string Left { get; set; }
     
-        [XmlAttribute("Bottom")]
-        public float BottomBacking
-        {
-            get => Bottom ?? 0;
-            set => Bottom = value;
-        }
-    
-        [XmlIgnore] public float? Left { get; set; }
-    
-        [XmlAttribute("Left")]
-        public float LeftBacking
-        {
-            get => Left ?? 0;
-            set => Left = value;
-        }
-    
-        [XmlIgnore] public float? Right { get; set; }
-    
-        [XmlAttribute("Right")]
-        public float RightBacking
-        {
-            get => Right ?? 0;
-            set => Right = value;
-        }
+        [XmlAttribute] public string Right { get; set; }
     
         [XmlAttribute]
-        public bool Dock
-        {
-            set
-            {
-                if (value)
-                    AnchorX = AnchorY = "(0, 1)";
-            }
-            get { return false; }
-        }
+        public string Dock { get; set; }
 
         [XmlArray("Components")]
         [XmlArrayItem("Component", typeof(ComponentElement))]
