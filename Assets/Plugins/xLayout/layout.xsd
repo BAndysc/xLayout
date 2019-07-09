@@ -17,6 +17,7 @@
       <xs:element type="VerticalLayout" name="VerticalLayout" />
       <xs:element type="Scroll" name="Scroll" />
       <xs:element type="ListView" name="ListView" />
+      <xs:element type="Prefab" name="Prefab"/>
       <xs:element type="RawImage" name="RawImage">
         <xs:annotation>
           <xs:documentation>
@@ -213,6 +214,19 @@
     </xs:complexContent>
   </xs:complexType>
 
+
+  <xs:complexType name="Prefab">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:attribute type="xString" name="Path">
+          <xs:annotation>
+            <xs:documentation>Path to prefab asset.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
   <xs:complexType name="Empty">
     <xs:complexContent>
       <xs:extension base="Element">

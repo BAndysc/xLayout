@@ -5,6 +5,7 @@ namespace xLayout.Definitions
 {
     public class BaseElement
     {
+        [XmlElement("Prefab", typeof(PrefabElement))]
         [XmlElement("Button", typeof(ButtonElement))]
         [XmlElement("Label", typeof(LabelElement))]
         [XmlElement("Empty", typeof(EmptyElement))]

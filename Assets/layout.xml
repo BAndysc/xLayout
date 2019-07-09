@@ -8,7 +8,7 @@
     <RawImage AnchorX="(0, 1)" AnchorY="(1, 1)" Height="160" Pivot="(0.5, 1)" Color="(0, 0, 0, 0.4)" Name="TopBar">
         <HorizontalLayout ExpandHeight="true" Flex="true">
             <RawImage Width="320" Color="(0, 0, 0, 0.2)" Name="Element">
-                
+                <Prefab Path="prefab.prefab" Dock="true" Left="10" Name="moj prefab" />
             </RawImage>
             <Empty Width="fill" Name="Icons">
                 <HorizontalLayout ExpandHeight="true" Align="middle" VertAlign="middle" Padding="17, 0, 17, 0" Spacing="10">

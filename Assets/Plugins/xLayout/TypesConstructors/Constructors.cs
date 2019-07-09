@@ -20,7 +20,8 @@ namespace xLayout.TypesConstructors
                 new ScrollConstructor(),
                 new VerticalLayoutConstructor(),
                 new HorizontalLayoutConstructor(),
-                new EmptyConstructor()
+                new EmptyConstructor(),
+                new PrefabConstructor(), 
             };
 
             foreach (var type in types)

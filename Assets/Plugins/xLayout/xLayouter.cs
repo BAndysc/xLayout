@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using xLayout.Definitions;
@@ -60,7 +61,16 @@ namespace xLayout
         
         private static GameObject CreateElement(RectTransformElement element, Transform parent, IReadOnlyLayoutContext context, out GameObject newParent)
         {
-            GameObject go = new GameObject(element.Name);
+            GameObject go = null;
+            if (element is PrefabElement prefab)
+            {
+                go = PrefabUtility.InstantiatePrefab(context.GetAsset<GameObject>(prefab.Path)) as GameObject;
+                go.name = element.Name;
+            }
+            else
+            {
+                go = new GameObject(element.Name);                
+            }
             go.transform.parent = parent;
             go.transform.localScale = Vector3.one;
 
@@ -70,8 +80,10 @@ namespace xLayout
             
             if (element.Active == "false")
                 go.SetActive(false);
-            
-            RectTransform childParent = go.AddComponent<RectTransform>();
+
+            RectTransform childParent = go.GetComponent<RectTransform>();
+            if (childParent == null)
+                childParent = go.AddComponent<RectTransform>();
     
             if (!string.IsNullOrEmpty(element.Padding))
             {
