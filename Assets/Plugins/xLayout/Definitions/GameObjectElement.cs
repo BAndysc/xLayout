@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace xLayout.Definitions
 {
-    public class PrefabElement : RectTransformElement
+    public class GameObjectElement : RectTransformElement
     {
         [XmlAttribute]
         public string Path { get; set; }
@@ -26,4 +26,20 @@ namespace xLayout.Definitions
         [XmlAttribute]
         public string Value { get; set; }
     }
+    
+    public class PrefabElement : RectTransformElement
+    {
+        [XmlAttribute]
+        public string Prefab { get; set; }
+        
+        [XmlElement("Property", typeof(PrefabInstancePropertyElement))]
+        public List<PrefabInstancePropertyElement> Properties { get; set; }
+    }
+
+    public class PrefabInstancePropertyElement
+    {
+        [XmlAttribute] public string Name { get; set; }
+        [XmlAttribute] public string Value { get; set; }
+    }
+    
 }

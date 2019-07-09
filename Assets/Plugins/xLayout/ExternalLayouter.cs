@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,6 +19,8 @@ namespace xLayout
 
         [SerializeField] private DateTime lastReload;
 
+        public HashSet<string> ReferencedResources;
+        
         void Update()
         {
             if (Application.isPlaying)
@@ -53,7 +56,7 @@ namespace xLayout
                 return;
             }
         
-            xLayouter.BuildLayoutFromXML(gameObject, path);
+            xLayouter.BuildLayoutFromXML(gameObject, path, out ReferencedResources);
         }
     }
 
@@ -63,6 +66,7 @@ namespace xLayout
     {
         public override void OnInspectorGUI()
         {
+            var target = this.target as ExternalLayouter;
             var layoutPath = serializedObject.FindProperty("layoutPath");
     
             if (string.IsNullOrEmpty(layoutPath.stringValue))
@@ -76,9 +80,19 @@ namespace xLayout
             
             EditorGUILayout.PropertyField(layoutPath);
     
+            EditorGUILayout.LabelField($"Referenced resources: {target.ReferencedResources.Count}");
+
+            EditorGUI.indentLevel++;
+
+            int i = 1;
+            foreach (var resource in target.ReferencedResources)
+                EditorGUILayout.LabelField($"{i++}. {resource}");
+            
+            EditorGUI.indentLevel--;
+            
             if (GUILayout.Button("Force reload"))
             {
-                (target as ExternalLayouter).Reload();
+                target.Reload();
             }
             
             serializedObject.ApplyModifiedProperties();

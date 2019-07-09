@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:xLayout"
+        xsi:schemaLocation="urn:xLayout Plugins/xLayout/resources.xsd">
+    
+    <Variable Name="mainColor" Value="(0.8, 0.8, 0.8, 1)" />
+    <Variable Name="fontColor" Value="(1, 0, 1, 1)" />
+    <!--<Style TargetType="Label">
+        <Setter Property="FontSize" Value="100"/>
+    </Style>-->
+    
+</Resources>

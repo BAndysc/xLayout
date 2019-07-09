@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:xLayout"
+           xmlns="urn:xLayout"
+           elementFormDefault="qualified">
+    
+    <xs:include schemaLocation="layout.xsd" />
+    
+    <xs:element name="Resources" type="Resources" />
+    
+</xs:schema>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using xLayout.Definitions;
 using Object = UnityEngine.Object;
 
 namespace xLayout
@@ -18,6 +19,7 @@ namespace xLayout
         
         private Dictionary<string, string> variables = new Dictionary<string, string>();
         private Dictionary<string, string> assets = new Dictionary<string, string>();
+        private Dictionary<string, ResourcePrefabElement> prefabs = new Dictionary<string, ResourcePrefabElement>();
 
         public void AddVariable(string key, string variable)
         {
@@ -147,6 +149,20 @@ namespace xLayout
 
             return ParseUtils.ParseVector2(value);
         }
+        
+        public Vector3 ParseVector3(string value)
+        {
+            value = DecodeString(value);
+
+            return ParseUtils.ParseVector3(value);
+        }
+        
+        public Vector4 ParseVector4(string value)
+        {
+            value = DecodeString(value);
+
+            return ParseUtils.ParseVector4(value);
+        }
 
         public T GetAsset<T>(string value) where T : Object
         {
@@ -156,6 +172,47 @@ namespace xLayout
                 return null;
 
             return AssetDatabase.LoadAssetAtPath<T>("Assets/" + value);
+        }
+
+        public ResourcePrefabElement GetPrefab(string prefabName)
+        {
+            if (prefabs.TryGetValue(prefabName, out var element))
+                return element;
+
+            Debug.LogError($"Prefab named `{prefabName}` not found!");
+            
+            return null;
+        }
+
+        public void MergeResource(LayoutContext otherContext)
+        {
+            foreach (var asset in otherContext.assets)
+            {
+                if (!assets.ContainsKey(asset.Key))
+                    assets[asset.Key] = asset.Value;
+            }
+            
+            foreach (var variable in otherContext.variables)
+            {
+                if (!variables.ContainsKey(variable.Key))
+                    variables[variable.Key] = variable.Value;
+            }
+            
+            foreach (var prefab in otherContext.prefabs)
+            {
+                if (!prefabs.ContainsKey(prefab.Key))
+                    prefabs[prefab.Key] = prefab.Value;
+            }
+        }
+
+        public void AddPrefab(string name, ResourcePrefabElement baseElement)
+        {
+            prefabs[name] = baseElement;
+        }
+
+        public void AddProperty(string propertyName, string propertyValue)
+        {
+            variables[propertyName] = ParseString(propertyValue);
         }
     }
 }

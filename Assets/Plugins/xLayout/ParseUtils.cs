@@ -50,11 +50,37 @@ namespace xLayout
             var split = txt.Split(',');
             
             if (split.Length != 2)
-                throw new Exception($"Error while parsing: {txt}, expected 4 floats");
+                throw new Exception($"Error while parsing: {txt}, expected 2 floats");
             
             return new Vector2(float.Parse(split[0]), float.Parse(split[1]));
         }
 
+        public static Vector3 ParseVector3(string txt)
+        {
+            txt = txt.Substring(1, txt.Length - 2);
+            var split = txt.Split(',');
+            
+            if (split.Length != 3)
+                throw new Exception($"Error while parsing: {txt}, expected 3 floats");
+            
+            var floats = split.Select(f => float.Parse(f)).ToArray();
+            
+            return new Vector3(floats[0], floats[1], floats[2]);
+        }
+        
+        public static Vector4 ParseVector4(string txt)
+        {
+            txt = txt.Substring(1, txt.Length - 2);
+            var split = txt.Split(',');
+            
+            if (split.Length != 4)
+                throw new Exception($"Error while parsing: {txt}, expected 4 floats");
+            
+            var floats = split.Select(f => float.Parse(f)).ToArray();
+            
+            return new Vector4(floats[0], floats[1], floats[2], floats[3]);
+        }
+        
         internal static TextAlignmentOptions? ParseTextMeshProAlignment(string horizontal, string vertical)
         {
             var anchor = ParseAlignment(horizontal, vertical);

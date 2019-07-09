@@ -17,6 +17,7 @@
       <xs:element type="VerticalLayout" name="VerticalLayout" />
       <xs:element type="Scroll" name="Scroll" />
       <xs:element type="ListView" name="ListView" />
+      <xs:element type="GameObject" name="GameObject" />
       <xs:element type="Prefab" name="Prefab"/>
       <xs:element type="RawImage" name="RawImage">
         <xs:annotation>
@@ -216,7 +217,7 @@
   </xs:complexType>
 
 
-  <xs:complexType name="Prefab">
+  <xs:complexType name="GameObject">
     <xs:complexContent>
       <xs:extension base="Element">
         <xs:choice maxOccurs="unbounded" minOccurs="0">
@@ -234,6 +235,22 @@
             <xs:documentation>Path to prefab asset.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="Prefab">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Property">
+            <xs:complexType>
+              <xs:attribute name="Name" use="required" type="xs:string"/>
+              <xs:attribute name="Value" use="required" type="xString"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:attribute name="Prefab" type="xString" use="required" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -311,32 +328,81 @@
   <xs:complexType name="Canvas">
     <xs:complexContent>
       <xs:extension base="Container">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element name="Resources">
-            <xs:complexType>
-              <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:element name="Variable">
-                  <xs:complexType>
-                    <xs:attribute name="Name" type="xs:string" use="required"/>
-                    <xs:attribute name="Value" type="xs:string" use="required"/>
-                  </xs:complexType>
-                </xs:element>
-
-                  <xs:element name="Asset">
-                      <xs:complexType>
-                          <xs:attribute name="Name" type="xs:string" use="required"/>
-                          <xs:attribute name="Path" type="xs:string" use="required"/>
-                      </xs:complexType>
-                  </xs:element>
-                  
-              </xs:choice>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>        
+        <xs:choice minOccurs="0">
+          <xs:element name="Resources" type="Resources" />
+        </xs:choice>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="Resources">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="Variable">
+        <xs:complexType>
+          <xs:attribute name="Name" type="xs:string" use="required"/>
+          <xs:attribute name="Value" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="Asset">
+        <xs:complexType>
+          <xs:attribute name="Name" type="xs:string" use="required"/>
+          <xs:attribute name="Path" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+
+
+      <xs:element name="Include">
+        <xs:complexType>
+          <xs:attribute name="Path" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="Prefab">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Content">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="Container">
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Properties">
+              <xs:complexType>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="Property">
+                    <xs:complexType>
+                      <xs:attribute name="Name" type="xs:string" use="required"/>
+                      <xs:attribute name="Required" type="xs:boolean" />
+                      <xs:attribute name="Default" type="xs:string" />
+                    </xs:complexType>
+                  </xs:element>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="Name" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      
+<!--      <xs:element name="Style">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Setter">
+              <xs:complexType>
+                <xs:attribute name="Property" use="required" type="xs:string"/>
+                <xs:attribute name="Value" use="required" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:attribute name="TargetType" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>-->
+
+    </xs:choice>
+  </xs:complexType>
 
   <xs:complexType name="Scroll">
     <xs:complexContent>
