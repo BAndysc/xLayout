@@ -15,12 +15,15 @@ namespace xLayout
     [Serializable]
     public class ExternalLayouter : MonoBehaviour
     {
+        public bool InstantUpdateLayout { get; set; }
+        
         [SerializeField] private string layoutPath;
 
         [SerializeField] private DateTime lastReload;
 
         public HashSet<string> ReferencedResources;
         
+#if UNITY_EDITOR
         void Update()
         {
             if (Application.isPlaying)
@@ -36,7 +39,11 @@ namespace xLayout
                     Reload();
                 }
             }
+            
+            if (InstantUpdateLayout)
+                EditorApplication.QueuePlayerLoopUpdate();
         }
+#endif
     
         // not fired?
         //    private void OnApplicationFocus(bool hasFocus)
@@ -80,15 +87,30 @@ namespace xLayout
             
             EditorGUILayout.PropertyField(layoutPath);
     
-            EditorGUILayout.LabelField($"Referenced resources: {target.ReferencedResources.Count}");
-
-            EditorGUI.indentLevel++;
-
-            int i = 1;
-            foreach (var resource in target.ReferencedResources)
-                EditorGUILayout.LabelField($"{i++}. {resource}");
             
-            EditorGUI.indentLevel--;
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.PrefixLabel("Instant update layout");
+
+                if (GUILayout.Toggle(!target.InstantUpdateLayout, "No", EditorStyles.miniButtonLeft))
+                    target.InstantUpdateLayout = false;
+
+                if (GUILayout.Toggle(target.InstantUpdateLayout, "Yes", EditorStyles.miniButtonRight))
+                    target.InstantUpdateLayout = true;
+            }
+            
+            EditorGUILayout.LabelField($"Referenced resources: {target.ReferencedResources?.Count ?? 0}");
+
+            if (target.ReferencedResources != null)
+            {
+                EditorGUI.indentLevel++;
+
+                int i = 1;
+                foreach (var resource in target.ReferencedResources)
+                    EditorGUILayout.LabelField($"{i++}. {resource}");
+            
+                EditorGUI.indentLevel--;                
+            }
             
             if (GUILayout.Button("Force reload"))
             {
