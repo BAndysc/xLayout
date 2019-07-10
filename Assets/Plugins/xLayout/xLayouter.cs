@@ -115,14 +115,18 @@ namespace xLayout
         private static GameObject CreateElement(RectTransformElement element, Transform parent, IReadOnlyLayoutContext context, out GameObject newParent)
         {
             GameObject go = null;
-            RectTransformElement originalElement = null;
+            List<RectTransformElement> originalElements = null;
             
-            if (element is PrefabElement prefab)
+            while (element is PrefabElement prefab)
             {
                 var prefabElement = context.GetPrefab(prefab.Prefab);
                 if (prefabElement != null)
                 {
-                    originalElement = element;
+                    if (originalElements == null)
+                        originalElements = new List<RectTransformElement>();
+                    
+                    originalElements.Add(element);
+                    
                     element = prefabElement.Content.Elements[0] as RectTransformElement;
                 }
             }
@@ -171,11 +175,16 @@ namespace xLayout
 
             ApplyTransformSettings(element, parent, context, go);
 
-            if (originalElement != null)
+            if (originalElements != null)
             {
-                ApplyTransformSettings(originalElement, parent, context, go);
-                if (!string.IsNullOrEmpty(originalElement.Name))
-                    go.name = originalElement.Name;
+                for (int i = originalElements.Count - 1; i >= 0; --i)
+                {
+                    var originalElement = originalElements[i];
+                    ApplyTransformSettings(originalElement, parent, context, go);
+                    if (!string.IsNullOrEmpty(originalElement.Name))
+                        go.name = originalElement.Name;                    
+                }
+
             }
             return go;
         }
@@ -310,7 +319,7 @@ namespace xLayout
             {
                 gameObject = CreateElement(rte, gameObject.transform, context, out parent);
             }
-            if (element is PrefabElement prefab)
+            while (element is PrefabElement prefab)
             {
                 var prefabElement = context.GetPrefab(prefab.Prefab);
                 if (prefabElement != null)
