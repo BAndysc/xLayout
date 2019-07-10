@@ -257,6 +257,13 @@
           </xs:element>
         </xs:choice>
         <xs:attribute name="Prefab" type="xString" use="required" />
+        <xs:attribute name="Property">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="[a-zA-Z0-9_]+:.*"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

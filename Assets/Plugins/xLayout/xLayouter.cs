@@ -327,7 +327,9 @@ namespace xLayout
                     if (!string.IsNullOrEmpty(prefab.Key))
                         byKeys[prefab.Key] = gameObject;
                     
-                    if ((prefabElement.Properties?.Count ?? 0) > 0 || (prefab.Properties?.Count ?? 0) > 0)
+                    if ((prefabElement.Properties?.Count ?? 0) > 0 || 
+                        (prefab.Properties?.Count ?? 0) > 0 || 
+                        !string.IsNullOrEmpty(prefab.Property))
                     {
                         var newContext = new LayoutContext();
                         newContext.MergeResource((LayoutContext)context); // haaack :S
@@ -343,6 +345,21 @@ namespace xLayout
                         {
                             foreach (var property in prefab.Properties)
                                 newContext.AddProperty(property.Name, property.Value);                    
+                        }
+
+                        if (!string.IsNullOrEmpty(prefab.Property))
+                        {
+                            var colon = prefab.Property.IndexOf(":");
+                            if (colon == -1)
+                            {
+                                Debug.LogError("Attribute Property in Prefab element is expected to match [a-zA-Z0-9_]+:.*");
+                            }
+                            else
+                            {
+                                var prop = prefab.Property.Substring(0, colon);
+                                var value = prefab.Property.Substring(colon + 1);
+                                newContext.AddProperty(prop, value);
+                            }
                         }
 
                         context = newContext;

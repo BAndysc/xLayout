@@ -61,7 +61,7 @@
     </Empty>
     
     <Empty Dock="fill" Top="260" Right="900" Left="100" Bottom="100" Name="Content">
-        <RawImage Color="(0, 0, 0, 0.25)" Dock="fill" Name="Scroll">
+        <RawImage Color="(0, 0, 0, 0.25)" AnchorX="(0, 0.5)" AnchorY="(0, 1)" Right="50" Name="Scroll">
             <Scroll>
                 <ListView Items="{Binding items}" AnchorX="(0, 1)" AnchorY="(1, 1)" Pivot="(0.5, 1)">
                     <VerticalLayout ExpandWidth="true" VertAlign="top" Spacing="40" FitSize="true">
@@ -82,6 +82,16 @@
                     </ListView.Element>
                 </ListView>
             </Scroll>
+        </RawImage>
+        
+        <RawImage Color="(0, 0, 0, 0.4)" AnchorY="(0, 1)" AnchorX="(0.5, 1)" Left="50">
+            <Prefab Prefab="BlueButton" Property="Text:woowow" />
+            <Components>
+                <Component Type="GridLayoutGroup">
+                    <Setter Field="m_StartCorner" Value="LowerRight"/>
+                    <Setter Field="m_CellSize" Value="(500, 500)" />
+                </Component>
+            </Components>
         </RawImage>
     </Empty>
 
@@ -105,5 +115,29 @@
         <Include Path="generalstyles.xml" />
         <Variable Name="kolortla" Value="(0, 1, 0, 0.5)" />
         <Asset Name="mat" Path="material.mat" />
+        
+        <Prefab Name="TheButton">
+            <Content>
+                <RawImage Color="{Resource col}" Dock="fill">
+                    <Label FontSize="40" Text="{Resource txt}" Dock="fill"/>
+                </RawImage>
+            </Content>
+            <Properties>
+                <Property Name="col" Required="true" />
+                <Property Name="txt" Required="true" />
+            </Properties>
+        </Prefab>
+        
+        <Prefab Name="BlueButton">
+            <Content>
+                <Prefab Prefab="TheButton">
+                    <Property Name="txt" Value="{Resource Text}"/>
+                    <Property Name="col" Value="(0, 0, 1)" />
+                </Prefab>
+            </Content>
+            <Properties>
+                <Property Name="Text" Required="true"/>
+            </Properties>
+        </Prefab>
     </Resources>
 </Canvas>

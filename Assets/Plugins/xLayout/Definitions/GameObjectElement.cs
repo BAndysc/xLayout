@@ -32,6 +32,9 @@ namespace xLayout.Definitions
         [XmlAttribute]
         public string Prefab { get; set; }
         
+        [XmlAttribute]
+        public string Property { get; set; }
+        
         [XmlElement("Property", typeof(PrefabInstancePropertyElement))]
         public List<PrefabInstancePropertyElement> Properties { get; set; }
     }
