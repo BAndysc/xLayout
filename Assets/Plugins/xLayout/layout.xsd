@@ -122,6 +122,7 @@
           </xs:annotation>
         </xs:attribute>
         
+        <xs:attribute type="xVec2" name="Offset" />
         <xs:attribute type="xVec2" name="AnchorX" />
         <xs:attribute type="xVec2" name="AnchorY" />
         <xs:attribute type="xVec2" name="Pivot">
@@ -488,25 +489,25 @@
 
   <xs:simpleType name="padding" final="restriction">
     <xs:restriction base="xs:string">
-      <xs:pattern value='(\d+(\.\d+)?|\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?)'/>
+      <xs:pattern value='(-?\d+(\.\d+)?|-?\d+(\.\d+)?, ?-?\d+(\.\d+)?, ?-?\d+(\.\d+)?, ?-?\d+(\.\d+)?)'/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="vec2" final="restriction">
     <xs:restriction base="xs:string">
-      <xs:pattern value='\(\d+(\.\d+)?, ?\d+(\.\d+)?\)'/>
+      <xs:pattern value='\(-?\d+(\.\d+)?, ?-?\d+(\.\d+)?\)'/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="vec3" final="restriction">
     <xs:restriction base="xs:string">
-      <xs:pattern value='\(\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?\)'/>
+      <xs:pattern value='\(-?\d+(\.\d+)?, ?-?\d+(\.\d+)?, ?-?\d+(\.\d+)?\)'/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="vec4" final="restriction">
     <xs:restriction base="xs:string">
-      <xs:pattern value='\(\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?, ?\d+(\.\d+)?\)'/>
+      <xs:pattern value='\(-?\d+(\.\d+)?, ?-?\d+(\.\d+)?, ?-?\d+(\.\d+)?, ?-?\d+(\.\d+)?\)'/>
     </xs:restriction>
   </xs:simpleType>
   

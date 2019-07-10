@@ -18,6 +18,9 @@ namespace xLayout.Definitions
         public string Name { get; set; }
     
         [XmlAttribute]
+        public string Offset { get; set; }
+        
+        [XmlAttribute]
         public string AnchorX { get; set; }
     
         [XmlAttribute]

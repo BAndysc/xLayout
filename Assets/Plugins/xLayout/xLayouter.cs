@@ -239,7 +239,7 @@ namespace xLayout
 
             rect.offsetMax = new Vector2(0, 0);
             rect.offsetMin = Vector2.zero;
-
+            
             if (!string.IsNullOrEmpty(element.Top))
             {
                 if (Mathf.Abs(rect.anchorMin.y - rect.anchorMax.y) > 0.01f)
@@ -299,6 +299,13 @@ namespace xLayout
                 }
                 else
                     rect.sizeDelta = new Vector2(rect.sizeDelta.x, context.ParseFloat(element.Height));
+            }
+
+
+            if (!string.IsNullOrEmpty(element.Offset))
+            {
+                var offset = context.ParseVector2(element.Offset);
+                rect.anchoredPosition += new Vector2(offset.x, -offset.y);
             }
         }
 

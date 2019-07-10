@@ -44,9 +44,8 @@
         </Components>
     </RawImage>
     
-    <Empty AnchorY="(0, 1)" Top="160" AnchorX="(1, 1)" Width="800" Pivot="(1, 0.5)" Name="Sidebar">
-        <RawImage Dock="fill" Right="40" Color="(0, 0, 0, 0.2)" Name="Margin">
-            
+    <RawImage AnchorY="(0, 1)" AnchorX="(1, 1)" Width="800" Pivot="(1, 0.5)" Name="Sidebar" Color="(0, 0, 0, 0.2)"
+              Offset="(-150, 160)" Bottom="160">
             <VerticalLayout ExpandWidth="true" Spacing="60" Padding="50, 0, 0, 0" VertAlign="top">
                 <RawImage Color="{Resource fontColor}" Height="100" Name="Header">
                     <Label Text="{Resource kolortla}" FontSize="50" Color="(1, 1, 1)" Dock="fill" Name="Text" />
@@ -57,8 +56,7 @@
                 </RawImage>
                 <Label Color="(1, 1, 1)" FitSize="vertical" Text="Lorem ipsum dolor sit amet." FontSize="50" Name="Description" />
             </VerticalLayout>
-        </RawImage>
-    </Empty>
+    </RawImage>
     
     <Empty Dock="fill" Top="260" Right="900" Left="100" Bottom="100" Name="Content">
         <RawImage Color="(0, 0, 0, 0.25)" AnchorX="(0, 0.5)" AnchorY="(0, 1)" Right="50" Name="Scroll">
