@@ -14,6 +14,7 @@ namespace xLayout.Definitions
         [XmlElement("Image", typeof(ImageElement))]
         [XmlElement("VerticalLayout", typeof(VerticalLayoutElement))]
         [XmlElement("HorizontalLayout",typeof(HorizontalLayoutElement))]
+        [XmlElement("GridLayout", typeof(GridLayoutElement))]
         [XmlElement("Scroll", typeof(ScrollElement))]
         [XmlElement("ListView", typeof(ListViewElement))]
         public List<BaseElement> Elements { get; set; }

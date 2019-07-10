@@ -171,7 +171,14 @@ namespace xLayout
             if (string.IsNullOrEmpty(value))
                 return null;
 
-            return AssetDatabase.LoadAssetAtPath<T>("Assets/" + value);
+            var path = "Assets/" + value;
+            
+            var asset =  AssetDatabase.LoadAssetAtPath<T>(path);
+
+            if (asset == null)
+                Debug.LogError($"Asset of type {typeof(T)} not found at {path}");
+            
+            return asset;
         }
 
         public ResourcePrefabElement GetPrefab(string prefabName)

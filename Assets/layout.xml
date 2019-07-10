@@ -85,13 +85,12 @@
         </RawImage>
         
         <RawImage Color="(0, 0, 0, 0.4)" AnchorY="(0, 1)" AnchorX="(0.5, 1)" Left="50">
-            <Prefab Prefab="BlueButton" Property="Text:woowow" />
-            <Components>
-                <Component Type="GridLayoutGroup">
-                    <Setter Field="m_StartCorner" Value="LowerRight"/>
-                    <Setter Field="m_CellSize" Value="(500, 500)" />
-                </Component>
-            </Components>
+            <GridLayout Spacing="(50, 50)" Padding="50" FitSize="both">
+                <Prefab Prefab="BlueButton" Property="Text:woowow" />
+                <Prefab Prefab="RedButton" Property="Text:woowow" />
+                <Prefab Prefab="GreenButton" Property="Text:woowow" />
+                <Prefab Prefab="YellowButton" Property="Text:woowow" />
+            </GridLayout>
         </RawImage>
     </Empty>
 
@@ -130,9 +129,44 @@
         
         <Prefab Name="BlueButton">
             <Content>
-                <Prefab Prefab="TheButton">
+                <Prefab Prefab="TheButton" Property="col:(0, 0, 1)">
                     <Property Name="txt" Value="{Resource Text}"/>
-                    <Property Name="col" Value="(0, 0, 1)" />
+                </Prefab>
+            </Content>
+            <Properties>
+                <Property Name="Text" Required="true"/>
+            </Properties>
+        </Prefab>
+
+
+        <Prefab Name="YellowButton">
+            <Content>
+                <Prefab Prefab="TheButton" Property="col:(1, 1, 0)">
+                    <Property Name="txt" Value="{Resource Text}"/>
+                </Prefab>
+            </Content>
+            <Properties>
+                <Property Name="Text" Required="true"/>
+            </Properties>
+        </Prefab>
+
+
+        <Prefab Name="RedButton">
+            <Content>
+                <Prefab Prefab="TheButton" Property="col:(1, 0, 0)">
+                    <Property Name="txt" Value="{Resource Text}"/>
+                </Prefab>
+            </Content>
+            <Properties>
+                <Property Name="Text" Required="true"/>
+            </Properties>
+        </Prefab>
+
+
+        <Prefab Name="GreenButton">
+            <Content>
+                <Prefab Prefab="TheButton" Property="col:(0, 1, 0)">
+                    <Property Name="txt" Value="{Resource Text}"/>
                 </Prefab>
             </Content>
             <Properties>

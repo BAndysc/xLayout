@@ -14,7 +14,7 @@ namespace xLayout.TypesConstructors
     {
         public override Type ConstructedType => typeof(HorizontalLayoutElement);
     }
-    
+
     public abstract class HorizontalOrVerticalLayoutConstructor : TypeConstructor<HorizontalOrVerticalLayoutElement>
     {
         protected override GameObject Install(GameObject go, HorizontalOrVerticalLayoutElement horzOrVert, IReadOnlyLayoutContext context)

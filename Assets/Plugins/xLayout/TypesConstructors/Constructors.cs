@@ -23,6 +23,7 @@ namespace xLayout.TypesConstructors
                 new EmptyConstructor(),
                 new PrefabConstructor(), 
                 new GameObjectConstructor(), 
+                new GridLayoutConstructor(), 
             };
 
             foreach (var type in types)
