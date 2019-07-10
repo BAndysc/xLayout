@@ -1,5 +1,6 @@
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 using xLayout.Definitions;
 
 namespace xLayout.TypesConstructors
@@ -34,33 +35,11 @@ namespace xLayout.TypesConstructors
                     Debug.LogError($"Cannot find field `{setter.Field}` on component {component}", obj);
                     continue;                    
                 }
-
-                var value = setter.Value;
-                
-                if (field.FieldType == typeof(string))
-                    field.SetValue(component, context.ParseString(value));
-                else if (field.FieldType == typeof(int))
-                    field.SetValue(component, context.ParseInt(value));
-                else if (field.FieldType == typeof(float))
-                    field.SetValue(component, context.ParseFloat(value));
-                else if (field.FieldType == typeof(Vector2))
-                    field.SetValue(component, context.ParseVector2(value));
-                else if (field.FieldType == typeof(Vector3))
-                    field.SetValue(component, context.ParseVector3(value));
-                else if (field.FieldType == typeof(Vector4))
-                    field.SetValue(component, context.ParseVector4(value));
-                else if (field.FieldType == typeof(Color))
-                    field.SetValue(component, context.ParseColor(value));
-                else if (field.FieldType.IsSubclassOf(typeof(Object)))
-                {
-                    var asset = context.GetAsset<Object>(value);
-                    field.SetValue(component, asset);                    
-                }
-                else
-                    Debug.LogError($"Don't know how to set value of field type {field.FieldType} in {component}/{field.Name}");
+                ReflectionUtils.ReflectionSetComponentField(context, field, component, setter.Value);
             }
             return go;
         }
+
 
         private GameObject DecodePath(GameObject root, string path)
         {

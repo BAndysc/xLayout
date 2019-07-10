@@ -362,7 +362,7 @@ namespace xLayout
     
             if (element is RectTransformElement rte_)
             {
-                InstallComponents(rte_, gameObject, byKeys);
+                InstallComponents(rte_, gameObject, byKeys, context);
             }
             
             constructor.PostInstall(gameObject, element, context);
@@ -370,7 +370,7 @@ namespace xLayout
             return byKeys;
         }
     
-        private static void InstallComponents(RectTransformElement element, GameObject gameObject, Dictionary<string,GameObject> byKeys)
+        private static void InstallComponents(RectTransformElement element, GameObject gameObject, Dictionary<string,GameObject> byKeys, IReadOnlyLayoutContext context)
         {
             if (!string.IsNullOrEmpty(element.Key))
             {
@@ -391,21 +391,15 @@ namespace xLayout
                     var component = gameObject.AddComponent(type);
     
                     if (componentElement.Bindings != null)
-                        InstallBindings(byKeys, componentElement, type, component);
+                        InstallBindings(byKeys, componentElement, type, component, context);
                 }
             }
         }
     
-        private static void InstallBindings(Dictionary<string, GameObject> byKeys, ComponentElement element, System.Type monoBehaviourType, Component component)
+        private static void InstallBindings(Dictionary<string, GameObject> byKeys, ComponentElement element, System.Type monoBehaviourType, Component component, IReadOnlyLayoutContext context)
         {
             foreach (var componentBinding in element.Bindings)
             {
-                if (!byKeys.TryGetValue(componentBinding.Source, out var source))
-                {
-                    Debug.LogError($"Trying to bind object of key {componentBinding.Source} but not found");
-                    continue;
-                }
-    
                 var field = monoBehaviourType.GetField(componentBinding.Field,
                     BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
     
@@ -414,24 +408,35 @@ namespace xLayout
                     Debug.LogError($"Component {monoBehaviourType.FullName} doesn't have field {componentBinding.Field}");
                     continue;
                 }
-    
-                if (field.FieldType.IsSubclassOf(typeof(Component)))
+
+                if (componentBinding is BindingElement binding)
                 {
-                    var sourceComponent = source.GetComponent((System.Type)field.FieldType);
+                    if (!byKeys.TryGetValue(binding.Source, out var source))
+                    {
+                        Debug.LogError($"Trying to bind object of key {binding.Source} but not found");
+                        continue;
+                    }
     
-                    if (sourceComponent == null)
-                        Debug.LogError($"Component {field.FieldType} not found on {source}", source);
+                    if (field.FieldType.IsSubclassOf(typeof(Component)))
+                    {
+                        var sourceComponent = source.GetComponent((System.Type)field.FieldType);
+    
+                        if (sourceComponent == null)
+                            Debug.LogError($"Component {field.FieldType} not found on {source}", source);
+                        else
+                            field.SetValue(component, sourceComponent);
+                    }
+                    else if (field.FieldType == typeof(GameObject))
+                    {
+                        field.SetValue(component, source);
+                    }
                     else
-                        field.SetValue(component, sourceComponent);
+                    {
+                        Debug.LogError($"Cannot bind type {field.FieldType}");
+                    }   
                 }
-                else if (field.FieldType == typeof(GameObject))
-                {
-                    field.SetValue(component, source);
-                }
-                else
-                {
-                    Debug.LogError($"Cannot bind type {field.FieldType}");
-                }
+                else if (componentBinding is ComponentSetterElement setter)
+                    ReflectionUtils.ReflectionSetComponentField(context, field, component, setter.Value);
             }
         }
     }

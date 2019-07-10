@@ -9,6 +9,7 @@ namespace xLayout.Definitions
         public string ComponentType { get; set; }
     
         [XmlElement("Binding", typeof(BindingElement))]
-        public List<BindingElement> Bindings { get; set; }
+        [XmlElement("Setter", typeof(ComponentSetterElement))]
+        public List<ComponentBinding> Bindings { get; set; }
     }
 }
