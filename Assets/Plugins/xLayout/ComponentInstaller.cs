@@ -25,7 +25,7 @@ namespace xLayout
                         return Enumerable.Empty<Type>();
                     }
                 })
-                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(MonoBehaviour)));
+                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(Component)));
 
             byNameUniqueType = new Dictionary<string, Type>();
             byNameTypes = new Dictionary<string, List<Type>>();

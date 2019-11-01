@@ -117,12 +117,12 @@ namespace xLayout
             return integer;
         }
         
-        public float ParseFloat(string value)
+        public float ParseFloat(string value, float defaultWhenNull = 0)
         {
             value = DecodeString(value);
             
             if (string.IsNullOrEmpty(value))
-                return 0;
+                return defaultWhenNull;
             
             if (!float.TryParse(ParseString(value), out var leFloat))
                 throw new Exception($"Value: '{value}' is supposed to be an integer");

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using UnityEngine;
 
 namespace xLayout.Definitions
 {
@@ -48,5 +49,10 @@ namespace xLayout.Definitions
         [XmlArray("Components")]
         [XmlArrayItem("Component", typeof(ComponentElement))]
         public List<ComponentElement> Components { get; set; }
+        
+        [XmlArray("Animations")]
+        [XmlArrayItem("CanvasAlphaAnimation", typeof(CanvasAlphaAnimationElement))]
+        [XmlArrayItem("ScaleAnimation", typeof(ScaleAnimationElement))]
+        public List<AnimationElement> Animations { get; set; }
     }
 }

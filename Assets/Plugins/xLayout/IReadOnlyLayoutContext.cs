@@ -8,7 +8,7 @@ namespace xLayout
         string ParseString(string value);
         bool ParseBool(string value, bool? @default = null);
         int ParseInt(string value);
-        float ParseFloat(string value);
+        float ParseFloat(string value, float defaultWhenNull = 0);
         Color ParseColor(string value);
         Vector4 ParsePadding(string value);
         Vector2 ParseVector2(string value);

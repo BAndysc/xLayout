@@ -46,15 +46,15 @@
     
     <RawImage AnchorY="(0, 1)" AnchorX="(1, 1)" Width="800" Pivot="(1, 0.5)" Name="Sidebar" Color="(0, 0, 0, 0.2)"
               Offset="(-150, 160)" Bottom="160">
-            <VerticalLayout ExpandWidth="true" Spacing="60" Padding="50, 0, 0, 0" VertAlign="top">
+            <VerticalLayout Flex="true" ExpandWidth="true" Spacing="60" Padding="50, 0, 0, 0" VertAlign="top">
                 <RawImage Color="{Resource fontColor}" Height="100" Name="Header">
                     <Label Text="{Resource kolortla}" FontSize="50" Color="(1, 1, 1)" Dock="fill" Name="Text" />
                 </RawImage>
-                <Label Color="(1, 1, 1)" FontSize="50"  FitSize="vertical" Text="Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet." Name="Description" />
+                <Label Color="(1, 1, 1)" FontSize="50" Text="Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet." Name="Description" />
                 <RawImage Material="{Resource mat}" Height="120" Name="Header">
                     <Label Text="About" Color="(1, 1, 1)" Dock="fill" FontSize="50" Name="Text"  />
                 </RawImage>
-                <Label Color="(1, 1, 1)" FitSize="vertical" Text="Lorem ipsum dolor sit amet." FontSize="50" Name="Description" />
+                <Label Color="(1, 1, 1)" Text="Lorem ipsum dolor sit amet." FontSize="50" Name="Description" />
             </VerticalLayout>
     </RawImage>
     
@@ -116,7 +116,54 @@
         <Prefab Name="TheButton">
             <Content>
                 <RawImage Color="{Resource col}" Dock="fill">
-                    <Label FontSize="40" Text="{Resource txt}" Dock="fill"/>
+                    <Label FontSize="40" Text="{Resource txt}" Dock="fill" />
+                    <Components>
+                        <Component Type="CanvasGroup">
+                            <Setter Field="alpha" Value="0.1" />
+                        </Component>
+                    </Components>
+                    <Animations>
+                        <CanvasAlphaAnimation DestValue="1">
+                            <Triggers>
+                                <PointerEnterEvent />
+                            </Triggers>
+                        </CanvasAlphaAnimation>
+                        <CanvasAlphaAnimation DestValue="0.1">
+                            <Triggers>
+                                <PointerExitEvent />
+                            </Triggers>
+                        </CanvasAlphaAnimation>
+
+
+                        <ScaleAnimation DestValue="(0.8, 0.8, 1)" Speed="4">
+                            <Triggers><PointerDownEvent /></Triggers>
+                        </ScaleAnimation>
+
+                        <ScaleAnimation DestValue="(1, 1, 1)"  Speed="4">
+                            <Triggers>
+                                <PointerUpEvent>
+                                    <Conditions>
+                                        <Not>
+                                            <PointerIsOver/>
+                                        </Not>
+                                    </Conditions>
+                                </PointerUpEvent>
+                            </Triggers>
+                            <Triggers><PointerExitEvent /></Triggers>
+                        </ScaleAnimation>
+                        
+
+                        <ScaleAnimation DestValue="(1.4, 1.4, 1)"  Speed="4">
+                            <Triggers>
+                                <PointerEnterEvent />
+                                <PointerUpEvent>
+                                    <Conditions>
+                                        <PointerIsOver/>
+                                    </Conditions>
+                                </PointerUpEvent>
+                            </Triggers>
+                        </ScaleAnimation>
+                    </Animations>
                 </RawImage>
             </Content>
             <Properties>

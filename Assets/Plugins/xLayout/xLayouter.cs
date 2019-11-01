@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using xLayout.Animations;
 using xLayout.Definitions;
 using xLayout.TypesConstructors;
 using Object = UnityEngine.Object;
@@ -396,13 +397,83 @@ namespace xLayout
             if (element is RectTransformElement rte_)
             {
                 InstallComponents(rte_, gameObject, byKeys, context);
+                InstallAnimations(rte_, gameObject, context);
             }
             
             constructor.PostInstall(gameObject, element, context);
             
             return byKeys;
         }
-    
+
+        private static void InstallAnimations(RectTransformElement rte, GameObject gameObject, IReadOnlyLayoutContext context)
+        {
+            foreach (var anim in rte.Animations)
+            {
+                UIAnimation animation;
+                if (anim is CanvasAlphaAnimationElement canvasAlpha)
+                {
+                    CanvasGroup cg = gameObject.EnsureComponent<CanvasGroup>();
+                    var alphaAnimation = gameObject.AddComponent<CanvasAlphaAnimation>();
+                    animation = alphaAnimation;
+                    alphaAnimation.Setup(cg, context.ParseFloat(canvasAlpha.DestValue));
+                }
+                else if (anim is ScaleAnimationElement scale)
+                {
+                    var scaleAnimation = gameObject.AddComponent<UIScaleAnimation>();
+                    animation = scaleAnimation;
+                    scaleAnimation.Setup(gameObject.GetComponent<RectTransform>(), context.ParseVector3(scale.DestValue), context.ParseFloat(scale.Speed, 1));
+                }
+                else
+                    throw new Exception();
+
+                foreach (var trigger in anim.Triggers)
+                {
+                    UITrigger triggerComponent;
+
+                    if (trigger is OnPointerEnterTriggerElement)
+                        triggerComponent = gameObject.AddComponent<OnPointerEnterPlayAnimation>();
+                    else if (trigger is OnPointerExitTriggerElement)
+                        triggerComponent = gameObject.AddComponent<OnPointerExitPlayAnimation>();
+                    else if (trigger is OnPointerDownTriggerElement)
+                        triggerComponent = gameObject.AddComponent<OnPointerDownPlayAnimation>();
+                    else if (trigger is OnPointerUpTriggerElement)
+                        triggerComponent = gameObject.AddComponent<OnPointerUpPlayAnimation>();
+                    else
+                        throw new Exception();
+
+                    triggerComponent.conditions = ParseConditions(trigger.Conditions, gameObject, context);
+                    
+                    triggerComponent.animation = animation;
+                }
+            }
+        }
+
+        private static UICondition[] ParseConditions(List<ConditionElement> conditionList, GameObject go,
+            IReadOnlyLayoutContext context)
+        {
+            var conditions = new UICondition[conditionList.Count];
+
+            for (int i = 0; i < conditionList.Count; ++i)
+            {
+                UICondition uiCondition = null;
+                var condition = conditionList[i];
+
+                if (condition is ConditionPointerOverElement)
+                    uiCondition = go.AddComponent<PointerIsOverCondition>();
+                else if (condition is ConditionNotElement notElement)
+                {
+                    var not = go.AddComponent<InverseCondition>();
+                    not.originals = ParseConditions(notElement.Conditions, go, context);
+                    Debug.Assert(not.originals.Length == 1);
+                    uiCondition = not;
+                }                
+                
+                conditions[i] = uiCondition;
+            }
+
+            return conditions;
+        }
+
         private static void InstallComponents(RectTransformElement element, GameObject gameObject, Dictionary<string,GameObject> byKeys, IReadOnlyLayoutContext context)
         {
             if (!string.IsNullOrEmpty(element.Key))
@@ -433,14 +504,29 @@ namespace xLayout
         {
             foreach (var componentBinding in element.Bindings)
             {
+                PropertyInfo property = null;
                 var field = monoBehaviourType.GetField(componentBinding.Field,
                     BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-    
+
+                Action<object> setValue = v => field.SetValue(component, v);
+                
                 if (field == null)
                 {
-                    Debug.LogError($"Component {monoBehaviourType.FullName} doesn't have field {componentBinding.Field}");
-                    continue;
+                    property = monoBehaviourType.GetProperty(componentBinding.Field,
+                        BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+
+                    if (property == null)
+                    {
+                        Debug.LogError(
+                            $"Component {monoBehaviourType.FullName} doesn't have field {componentBinding.Field}");
+                        continue;
+                    }
+                    
+                    setValue = v => property.SetValue(component, v);
                 }
+
+                string fieldName = field?.Name ?? property.Name;
+                Type fieldType = field?.FieldType ?? property.PropertyType;
 
                 if (componentBinding is BindingElement binding)
                 {
@@ -457,11 +543,11 @@ namespace xLayout
                         if (sourceComponent == null)
                             Debug.LogError($"Component {field.FieldType} not found on {source}", source);
                         else
-                            field.SetValue(component, sourceComponent);
+                            setValue(sourceComponent);
                     }
                     else if (field.FieldType == typeof(GameObject))
                     {
-                        field.SetValue(component, source);
+                        setValue(source);
                     }
                     else
                     {
@@ -469,7 +555,7 @@ namespace xLayout
                     }   
                 }
                 else if (componentBinding is ComponentSetterElement setter)
-                    ReflectionUtils.ReflectionSetComponentField(context, field, component, setter.Value);
+                    ReflectionUtils.ReflectionSetComponentField(context, fieldName, fieldType, setValue, component, setter.Value);
             }
         }
     }

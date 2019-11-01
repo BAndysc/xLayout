@@ -35,7 +35,7 @@ namespace xLayout.TypesConstructors
                     Debug.LogError($"Cannot find field `{setter.Field}` on component {component}", obj);
                     continue;                    
                 }
-                ReflectionUtils.ReflectionSetComponentField(context, field, component, setter.Value);
+                ReflectionUtils.ReflectionSetComponentField(context, field.Name, field.FieldType, v => field.SetValue(component, v), component, setter.Value);
             }
             return go;
         }

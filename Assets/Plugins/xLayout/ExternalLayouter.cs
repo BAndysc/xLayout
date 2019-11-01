@@ -13,13 +13,15 @@ namespace xLayout
     [ExecuteAlways]
     #endif
     [Serializable]
-    public class ExternalLayouter : MonoBehaviour
+    public class ExternalLayouter : MonoBehaviour, ISerializationCallbackReceiver
     {
         public bool InstantUpdateLayout { get; set; }
         
         [SerializeField] private string layoutPath;
 
-        [SerializeField] private DateTime lastReload;
+        private DateTime lastReload;
+        
+        [SerializeField] private long lastReloadSecs;
 
         public HashSet<string> ReferencedResources;
         
@@ -64,6 +66,16 @@ namespace xLayout
             }
         
             xLayouter.BuildLayoutFromXML(gameObject, path, out ReferencedResources);
+        }
+
+        public void OnBeforeSerialize()
+        {
+            lastReloadSecs = lastReload.ToBinary();
+        }
+
+        public void OnAfterDeserialize()
+        {
+            lastReload = DateTime.FromBinary(lastReloadSecs);
         }
     }
 

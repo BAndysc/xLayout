@@ -27,14 +27,14 @@ namespace xLayout.TypesConstructors
             if (horzOrVert is VerticalLayoutElement vert)
             {
                 group = go.AddComponent<VerticalLayoutGroup>();
-                group.childControlHeight = context.ParseBool(vert.Flex);
+                group.childControlHeight = group.childControlWidth = context.ParseBool(vert.Flex);
                 if (fitter != null)
                     fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             }
             else if (horzOrVert is HorizontalLayoutElement hor)
             {
                 group = go.AddComponent<HorizontalLayoutGroup>();
-                group.childControlWidth = context.ParseBool(hor.Flex);
+                group.childControlHeight = group.childControlWidth = context.ParseBool(hor.Flex);
                 
                 if (fitter != null)
                     fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
