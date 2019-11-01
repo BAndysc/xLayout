@@ -91,6 +91,9 @@
             <xs:element name="PointerUpEvent">
                 <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
             </xs:element>
+            <xs:element name="EnableEvent">
+                <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
+            </xs:element>
         </xs:choice>
     </xs:complexType>
 

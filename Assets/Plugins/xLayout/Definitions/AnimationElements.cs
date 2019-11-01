@@ -10,6 +10,7 @@ namespace xLayout.Definitions
         [XmlArrayItem("PointerExitEvent", typeof(OnPointerExitTriggerElement))]
         [XmlArrayItem("PointerDownEvent", typeof(OnPointerDownTriggerElement))]
         [XmlArrayItem("PointerUpEvent", typeof(OnPointerUpTriggerElement))]
+        [XmlArrayItem("EnableEvent", typeof(OnEnableTriggerElement))]
         public List<TriggerElement> Triggers { get; set; }
     }
     
@@ -44,6 +45,7 @@ namespace xLayout.Definitions
     public class OnPointerExitTriggerElement : TriggerElement {}
     public class OnPointerDownTriggerElement : TriggerElement {}
     public class OnPointerUpTriggerElement : TriggerElement {}
+    public class OnEnableTriggerElement : TriggerElement {}
 
     public class ConditionElement
     {

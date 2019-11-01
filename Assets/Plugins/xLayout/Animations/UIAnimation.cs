@@ -12,13 +12,15 @@ namespace xLayout.Animations
         
         private void Awake()
         {
-            animator = GetComponent<UIAnimator>();
+            if (animator == null)
+                animator = GetComponent<UIAnimator>();
         }
 
         protected abstract System.IDisposable PlayAnimation();
         
         public void Animate()
         {
+            Awake();
             var anim = PlayAnimation();
             animator.StartAnimation(GetType(), anim);
         }

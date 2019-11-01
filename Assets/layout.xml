@@ -56,6 +56,17 @@
                 </RawImage>
                 <Label Color="(1, 1, 1)" Text="Lorem ipsum dolor sit amet." FontSize="50" Name="Description" />
             </VerticalLayout>
+        
+        <Components>
+            <Component Type="CanvasGroup">
+                <Setter Field="alpha" Value="0"/>
+            </Component>
+        </Components>
+        <Animations>
+            <CanvasAlphaAnimation DestValue="1">
+                <Triggers><EnableEvent /></Triggers>
+            </CanvasAlphaAnimation>
+        </Animations>
     </RawImage>
     
     <Empty Dock="fill" Top="260" Right="900" Left="100" Bottom="100" Name="Content">

@@ -438,6 +438,8 @@ namespace xLayout
                         triggerComponent = gameObject.AddComponent<OnPointerDownPlayAnimation>();
                     else if (trigger is OnPointerUpTriggerElement)
                         triggerComponent = gameObject.AddComponent<OnPointerUpPlayAnimation>();
+                    else if (trigger is OnEnableTriggerElement)
+                        triggerComponent = gameObject.AddComponent<OnEnablePlayAnimation>();
                     else
                         throw new Exception();
 
