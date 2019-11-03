@@ -16,7 +16,12 @@ namespace xLayout.Animations
         protected override IDisposable PlayAnimation()
         {
             return new FollowValue<Vector3>(rt.localScale, destScale,
-                (current, target, deltaTime) => Vector3.MoveTowards(current, target, deltaTime * speed)).Subscribe(t => rt.localScale = t);
+                (current, target, deltaTime) => Vector3.MoveTowards(current, target, deltaTime * speed)).Subscribe(t => rt.localScale = t, AnimationCompleted);
+        }
+
+        protected override void PlayInstantAnimation()
+        {
+            rt.localScale = destScale;
         }
 
         internal void Setup(RectTransform rt, Vector3 destScale, float speed)

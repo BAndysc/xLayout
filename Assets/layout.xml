@@ -5,7 +5,7 @@
     
     <RawImage Dock="fill" Color="(0.1, 0.2, 0.5)"  Name="Background" />
     
-    <RawImage AnchorX="(0, 1)" AnchorY="(1, 1)" Height="160" Pivot="(0.5, 1)" Color="(0, 0, 0, 0.4)" Name="TopBar">
+    <RawImage AnchorX="(0, 1)" AnchorY="(1, 1)" Height="160" Pivot="(0.5, 1)" Color="(0, 0, 0, 0.4)" Name="TopBar" Offset="(0, -160)">
         <HorizontalLayout ExpandHeight="true" Flex="true">
             <RawImage Width="320" Color="(0, 0, 0, 0.2)" Name="Element">
                 <GameObject Path="prefab.prefab" Dock="fill" Left="10" Name="moj prefab">
@@ -14,7 +14,19 @@
             </RawImage>
             <Empty Width="fill" Name="Icons">
                 <HorizontalLayout ExpandHeight="true" Align="middle" VertAlign="middle" Padding="17, 0, 17, 0" Spacing="10">
-                    <Image PreserveAspect="true" Width="150" Image="Images/circ.png" />
+                    <Image PreserveAspect="true" Width="150" Image="Images/circ.png">
+                        <Animations>
+                            <ScaleAnimation DestValue="(1.3, 1.3, 1)" Key="zoomin">
+                                <Triggers><PointerEnterEvent /><AnimationFinishedEvent Animation="zoomout"/></Triggers>
+                            </ScaleAnimation>
+                            <ScaleAnimation DestValue="(1, 1, 1)" Key="zoomout">
+                                <Triggers><AnimationFinishedEvent Animation="zoomin"/></Triggers>
+                            </ScaleAnimation>
+                            <ScaleAnimation DestValue="(1, 1, 1)">
+                                <Triggers><PointerExitEvent /></Triggers>
+                            </ScaleAnimation>
+                        </Animations>
+                    </Image>
                     <Image PreserveAspect="true" Width="150" Image="Images/circ.png" />
                     <Image PreserveAspect="true" Width="150" Image="Images/circ.png" />
                     <Image PreserveAspect="true" Width="150" Image="Images/emptycirc.png" />
@@ -42,6 +54,11 @@
                 <Binding Field="btn" Source="aaa" />
             </Component>
         </Components>
+        <Animations>
+            <PositionAnimation Offset="(0, -160)" Speed="100">
+                <Triggers><EnableEvent /></Triggers>
+            </PositionAnimation>
+        </Animations>
     </RawImage>
     
     <RawImage AnchorY="(0, 1)" AnchorX="(1, 1)" Width="800" Pivot="(1, 0.5)" Name="Sidebar" Color="(0, 0, 0, 0.2)"
@@ -70,7 +87,7 @@
     </RawImage>
     
     <Empty Dock="fill" Top="260" Right="900" Left="100" Bottom="100" Name="Content">
-        <RawImage Color="(0, 0, 0, 0.25)" AnchorX="(0, 0.5)" AnchorY="(0, 1)" Right="50" Name="Scroll">
+        <RawImage Color="(0, 0, 0, 0.25)" AnchorX="(0, 0.5)" AnchorY="(0, 1)" Right="50" Name="Left panel">
             <Scroll>
                 <ListView Items="{Binding items}" AnchorX="(0, 1)" AnchorY="(1, 1)" Pivot="(0.5, 1)">
                     <VerticalLayout ExpandWidth="true" VertAlign="top" Spacing="40" FitSize="true">
@@ -91,6 +108,19 @@
                     </ListView.Element>
                 </ListView>
             </Scroll>
+            <Animations>
+                <PositionAnimation Offset="(-1300, 0)" Speed="1000">
+                    <Triggers>
+                        <EnableEvent Instant="true" />
+                        <PointerExitEvent />
+                    </Triggers>
+                </PositionAnimation>
+                <PositionAnimation Offset="(0, 0)" Speed="1000">
+                    <Triggers>
+                        <PointerEnterEvent />
+                    </Triggers>
+                </PositionAnimation>
+            </Animations>
         </RawImage>
         
         <RawImage Color="(0, 0, 0, 0.4)" AnchorY="(0, 1)" AnchorX="(0.5, 1)" Left="50">

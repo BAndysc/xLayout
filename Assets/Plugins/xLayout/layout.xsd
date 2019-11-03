@@ -64,42 +64,56 @@
     </xs:complexType>
 
     <xs:complexType name="NotCondition">
-        <xs:extension base="conditionChildrenBase" />
+        <xs:complexContent>
+            <xs:extension base="conditionChildrenBase" />
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="triggerType">
-        <xs:choice minOccurs="0">
-            <xs:element name="Conditions">
-                <xs:complexType>
-                    <xs:extension base="conditionChildrenBase" />
-                </xs:complexType>
-            </xs:element>
-        </xs:choice>
+        <xs:complexContent>
+            <xs:choice minOccurs="0">
+                <xs:element name="Conditions">
+                    <xs:complexType>
+                        <xs:extension base="conditionChildrenBase" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:attribute name="Instant" type="xBool" />
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="triggersType">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="PointerEnterEvent">
-                <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
-            </xs:element>
-            <xs:element name="PointerExitEvent">
-                <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
-            </xs:element>
-            <xs:element name="PointerDownEvent">
-                <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
-            </xs:element>
-            <xs:element name="PointerUpEvent">
-                <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
-            </xs:element>
-            <xs:element name="EnableEvent">
-                <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
-            </xs:element>
-        </xs:choice>
+        <xs:complexContent>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="PointerEnterEvent">
+                    <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
+                </xs:element>
+                <xs:element name="PointerExitEvent">
+                    <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
+                </xs:element>
+                <xs:element name="PointerDownEvent">
+                    <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
+                </xs:element>
+                <xs:element name="PointerUpEvent">
+                    <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
+                </xs:element>
+                <xs:element name="EnableEvent">
+                    <xs:complexType><xs:extension base="triggerType"/></xs:complexType>
+                </xs:element>
+                <xs:element name="AnimationFinishedEvent">
+                    <xs:complexType>
+                        <xs:attribute name="Animation" type="xs:string" />
+                    </xs:complexType>
+            </xs:choice>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="baseAnimation">
-        <xs:element name="Triggers" type="triggersType">
-        </xs:element>
+        <xs:complexContent>
+            <xs:element name="Triggers" type="triggersType">
+            </xs:element>
+            <xs:attribute name="Key" type="xString" />
+        </xs:complexContent>
     </xs:complexType>
 
 
@@ -153,6 +167,17 @@
                                         </xs:extension>
                                     </xs:complexType>
                                 </xs:element>
+
+
+                                <xs:element name="PositionAnimation">
+                                    <xs:complexType>
+                                        <xs:extension base="baseAnimation">
+                                            <xs:attribute name="Offset" type="xVec2" use="required" />
+                                            <xs:attribute name="Speed" type="xFloat" />
+                                        </xs:extension>
+                                    </xs:complexType>
+                                </xs:element>
+                                
                             </xs:choice>
 
                         </xs:complexType>

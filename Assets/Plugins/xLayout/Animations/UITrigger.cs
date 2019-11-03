@@ -8,10 +8,17 @@ namespace xLayout.Animations
         
         public UIAnimation animation;
 
+        public bool instant;
+
         protected void TryPlay()
         {
             if (ConditionsMet())
-            animation.Animate();
+            {
+                if (instant)
+                    animation.FastForward();
+                else
+                    animation.Animate();
+            }
         }
 
         private bool ConditionsMet()

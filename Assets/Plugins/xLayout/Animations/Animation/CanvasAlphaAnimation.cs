@@ -14,7 +14,12 @@ namespace xLayout.Animations
 
         protected override IDisposable PlayAnimation()
         {
-            return new FollowValue<float>(canvas.alpha, destValue, Mathf.MoveTowards).Subscribe(t => canvas.alpha = t);
+            return new FollowValue<float>(canvas.alpha, destValue, Mathf.MoveTowards).Subscribe(t => canvas.alpha = t, AnimationCompleted);
+        }
+
+        protected override void PlayInstantAnimation()
+        {
+            canvas.alpha = destValue;
         }
 
         internal void Setup(CanvasGroup canvas, float value)

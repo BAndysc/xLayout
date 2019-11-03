@@ -407,6 +407,10 @@ namespace xLayout
 
         private static void InstallAnimations(RectTransformElement rte, GameObject gameObject, IReadOnlyLayoutContext context)
         {
+            Dictionary<string, UIAnimation> animationByName = new Dictionary<string, UIAnimation>();
+            
+            List<(UIAnimation, AnimationElement)> listOfAnimations = new List<(UIAnimation, AnimationElement)>();
+
             foreach (var anim in rte.Animations)
             {
                 UIAnimation animation;
@@ -421,11 +425,29 @@ namespace xLayout
                 {
                     var scaleAnimation = gameObject.AddComponent<UIScaleAnimation>();
                     animation = scaleAnimation;
-                    scaleAnimation.Setup(gameObject.GetComponent<RectTransform>(), context.ParseVector3(scale.DestValue), context.ParseFloat(scale.Speed, 1));
+                    scaleAnimation.Setup(gameObject.GetComponent<RectTransform>(),
+                        context.ParseVector3(scale.DestValue), context.ParseFloat(scale.Speed, 1));
+                }
+                else if (anim is PositionAnimationElement position)
+                {
+                    var positionAnimation = gameObject.AddComponent<UIPositionAnimation>();
+                    animation = positionAnimation;
+                    positionAnimation.Setup(gameObject.GetComponent<RectTransform>(),
+                        context.ParseVector2(position.Offset), context.ParseFloat(position.Speed, 1));
                 }
                 else
                     throw new Exception();
 
+                if (!string.IsNullOrEmpty(anim.Key))
+                    animationByName[context.ParseString(anim.Key)] = animation;
+                
+                listOfAnimations.Add((animation, anim));
+            }
+            
+            foreach (var pair in listOfAnimations)
+            {
+                var anim = pair.Item2;
+                var animation = pair.Item1;
                 foreach (var trigger in anim.Triggers)
                 {
                     UITrigger triggerComponent;
@@ -440,11 +462,21 @@ namespace xLayout
                         triggerComponent = gameObject.AddComponent<OnPointerUpPlayAnimation>();
                     else if (trigger is OnEnableTriggerElement)
                         triggerComponent = gameObject.AddComponent<OnEnablePlayAnimation>();
+                    else if (trigger is OnAnimationFinishedTriggerElement onFinish)
+                    {
+                        var finishTriggerComponent = gameObject.AddComponent<OnAnimationFinishedPlayAnimation>();
+                        if (!animationByName.TryGetValue(context.ParseString(onFinish.Animation),
+                            out var otherAnimation))
+                            Debug.LogError("Cannot find animation with key " + onFinish.Animation);
+
+                        finishTriggerComponent.otherAnimation = otherAnimation;
+                        triggerComponent = finishTriggerComponent;
+                    }
                     else
                         throw new Exception();
 
                     triggerComponent.conditions = ParseConditions(trigger.Conditions, gameObject, context);
-                    
+                    triggerComponent.instant = context.ParseBool(trigger.Instant);
                     triggerComponent.animation = animation;
                 }
             }

@@ -53,6 +53,7 @@ namespace xLayout.Definitions
         [XmlArray("Animations")]
         [XmlArrayItem("CanvasAlphaAnimation", typeof(CanvasAlphaAnimationElement))]
         [XmlArrayItem("ScaleAnimation", typeof(ScaleAnimationElement))]
+        [XmlArrayItem("PositionAnimation", typeof(PositionAnimationElement))]
         public List<AnimationElement> Animations { get; set; }
     }
 }
