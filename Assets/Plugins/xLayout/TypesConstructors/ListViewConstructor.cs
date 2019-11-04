@@ -3,6 +3,7 @@ using xLayout.Definitions;
 
 namespace xLayout.TypesConstructors
 {
+    [TypeConstructor]
     public class ListViewConstructor : TypeConstructor<ListViewElement>
     {
         protected override GameObject Install(GameObject go, ListViewElement element, IReadOnlyLayoutContext context)

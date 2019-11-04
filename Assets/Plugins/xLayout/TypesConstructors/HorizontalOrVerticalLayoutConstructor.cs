@@ -5,11 +5,13 @@ using xLayout.Definitions;
 
 namespace xLayout.TypesConstructors
 {
+    [TypeConstructor]
     public class VerticalLayoutConstructor : HorizontalOrVerticalLayoutConstructor
     {
         public override Type ConstructedType => typeof(VerticalLayoutElement);
     }
     
+    [TypeConstructor]
     public class HorizontalLayoutConstructor : HorizontalOrVerticalLayoutConstructor
     {
         public override Type ConstructedType => typeof(HorizontalLayoutElement);

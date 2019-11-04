@@ -407,39 +407,17 @@ namespace xLayout
 
         private static void InstallAnimations(RectTransformElement rte, GameObject gameObject, IReadOnlyLayoutContext context)
         {
-            Dictionary<string, UIAnimation> animationByName = new Dictionary<string, UIAnimation>();
+            AnimationContext animationContext = new AnimationContext();
             
             List<(UIAnimation, AnimationElement)> listOfAnimations = new List<(UIAnimation, AnimationElement)>();
 
             foreach (var anim in rte.Animations)
             {
-                UIAnimation animation;
-                if (anim is CanvasAlphaAnimationElement canvasAlpha)
-                {
-                    CanvasGroup cg = gameObject.EnsureComponent<CanvasGroup>();
-                    var alphaAnimation = gameObject.AddComponent<CanvasAlphaAnimation>();
-                    animation = alphaAnimation;
-                    alphaAnimation.Setup(cg, context.ParseFloat(canvasAlpha.DestValue));
-                }
-                else if (anim is ScaleAnimationElement scale)
-                {
-                    var scaleAnimation = gameObject.AddComponent<UIScaleAnimation>();
-                    animation = scaleAnimation;
-                    scaleAnimation.Setup(gameObject.GetComponent<RectTransform>(),
-                        context.ParseVector3(scale.DestValue), context.ParseFloat(scale.Speed, 1));
-                }
-                else if (anim is PositionAnimationElement position)
-                {
-                    var positionAnimation = gameObject.AddComponent<UIPositionAnimation>();
-                    animation = positionAnimation;
-                    positionAnimation.Setup(gameObject.GetComponent<RectTransform>(),
-                        context.ParseVector2(position.Offset), context.ParseFloat(position.Speed, 1));
-                }
-                else
-                    throw new Exception();
+                var constructor = Constructors.GetAnimationConstructor(anim);
+                UIAnimation animation = constructor.Install(gameObject, anim, context);
 
                 if (!string.IsNullOrEmpty(anim.Key))
-                    animationByName[context.ParseString(anim.Key)] = animation;
+                    animationContext.AddAnimation(context.ParseString(anim.Key), animation);
                 
                 listOfAnimations.Add((animation, anim));
             }
@@ -450,30 +428,8 @@ namespace xLayout
                 var animation = pair.Item1;
                 foreach (var trigger in anim.Triggers)
                 {
-                    UITrigger triggerComponent;
-
-                    if (trigger is OnPointerEnterTriggerElement)
-                        triggerComponent = gameObject.AddComponent<OnPointerEnterPlayAnimation>();
-                    else if (trigger is OnPointerExitTriggerElement)
-                        triggerComponent = gameObject.AddComponent<OnPointerExitPlayAnimation>();
-                    else if (trigger is OnPointerDownTriggerElement)
-                        triggerComponent = gameObject.AddComponent<OnPointerDownPlayAnimation>();
-                    else if (trigger is OnPointerUpTriggerElement)
-                        triggerComponent = gameObject.AddComponent<OnPointerUpPlayAnimation>();
-                    else if (trigger is OnEnableTriggerElement)
-                        triggerComponent = gameObject.AddComponent<OnEnablePlayAnimation>();
-                    else if (trigger is OnAnimationFinishedTriggerElement onFinish)
-                    {
-                        var finishTriggerComponent = gameObject.AddComponent<OnAnimationFinishedPlayAnimation>();
-                        if (!animationByName.TryGetValue(context.ParseString(onFinish.Animation),
-                            out var otherAnimation))
-                            Debug.LogError("Cannot find animation with key " + onFinish.Animation);
-
-                        finishTriggerComponent.otherAnimation = otherAnimation;
-                        triggerComponent = finishTriggerComponent;
-                    }
-                    else
-                        throw new Exception();
+                    var constructor = Constructors.GetTriggerConstructor(trigger);
+                    UITrigger triggerComponent = constructor.Install(gameObject, trigger, context, animationContext);
 
                     triggerComponent.conditions = ParseConditions(trigger.Conditions, gameObject, context);
                     triggerComponent.instant = context.ParseBool(trigger.Instant);

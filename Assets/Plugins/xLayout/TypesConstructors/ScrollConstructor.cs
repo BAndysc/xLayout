@@ -4,6 +4,7 @@ using xLayout.Definitions;
 
 namespace xLayout.TypesConstructors
 {
+    [TypeConstructor]
     public class ScrollConstructor : TypeConstructor<ScrollElement>
     {
         protected override GameObject Install(GameObject go, ScrollElement element, IReadOnlyLayoutContext context)

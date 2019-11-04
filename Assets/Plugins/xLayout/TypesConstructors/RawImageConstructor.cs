@@ -5,6 +5,7 @@ using xLayout.Definitions;
 
 namespace xLayout.TypesConstructors
 {
+    [TypeConstructor]
     public class RawImageConstructor : TypeConstructor<RawImageElement>
     {
         protected override GameObject Install(GameObject go, RawImageElement element, IReadOnlyLayoutContext context)

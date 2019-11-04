@@ -5,6 +5,7 @@ using xLayout.Definitions;
 
 namespace xLayout.TypesConstructors
 {
+    [TypeConstructor]
     public class GameObjectConstructor : TypeConstructor<GameObjectElement>
     {
         protected override GameObject Install(GameObject go, GameObjectElement element, IReadOnlyLayoutContext context)
